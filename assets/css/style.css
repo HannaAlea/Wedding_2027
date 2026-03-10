@@ -1,3 +1,11 @@
+@font-face {
+    font-family: "Gellatio";
+    src: url("./gg.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+
 body{
     background-color: #E8DBD0;
     font-family: 'Georgia', serif;
@@ -28,3 +36,170 @@ text-decoration:none;
 border-radius:6px;
 margin-top:20px;
 }
+
+.names{
+    font-family: "Gellatio";
+    font-size: 70px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.dress-code-section {
+  position: relative;
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 70px 40px 60px;
+  background: #f5eee7;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* soft abstract background shapes */
+.dress-code-section::before,
+.dress-code-section::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.dress-code-section::before {
+  width: 900px;
+  height: 900px;
+  background: rgba(230, 204, 198, 0.45);
+  left: -180px;
+  bottom: -500px;
+  border-radius: 45% 55% 0 0;
+  transform: rotate(-12deg);
+}
+
+.dress-code-section::after {
+  width: 700px;
+  height: 400px;
+  background: rgba(232, 213, 210, 0.5);
+  right: -120px;
+  top: 20px;
+  border-radius: 50% 0 0 50%;
+  transform: rotate(-18deg);
+}
+
+.dress-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255,255,255,0.18), rgba(255,255,255,0.18)),
+    url("images/paper-texture.jpg");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.22;
+  z-index: 0;
+}
+
+.dress-content {
+  position: relative;
+  z-index: 1;
+}
+
+.dress-code-section h2 {
+  font-family: "Great Vibes", cursive;
+  font-size: 4rem;
+  font-weight: 400;
+  color: #8a6446;
+  margin: 0 0 18px;
+}
+
+.top-text {
+  max-width: 850px;
+  margin: 0 auto 55px;
+  font-family: Arial, sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 2px;
+  line-height: 1.35;
+  color: #4f3d32;
+}
+
+.color-row {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  margin-bottom: 70px;
+}
+
+.color-item {
+  width: 130px;
+  text-align: center;
+}
+
+.color-circle {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  margin: 0 auto 14px;
+}
+
+.color-item span {
+  display: block;
+  font-family: Arial, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  color: #4a372d;
+  line-height: 1.35;
+}
+
+.burgundy {
+  background: #7c1d2d;
+}
+
+.wine {
+  background: #aa0816;
+}
+
+.sage {
+  background: #8b9d86;
+}
+
+.ivory {
+  background: #ccb483;
+}
+
+.beige {
+  background: #e8ddc0;
+}
+
+.bottom-text {
+  font-family: Arial, sans-serif;
+  font-size: 1.25rem;
+  letter-spacing: 1px;
+  line-height: 1.35;
+  color: #4a372d;
+  margin: 0;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  .dress-code-section {
+    padding: 50px 20px;
+  }
+
+  .dress-code-section h2 {
+    font-size: 3rem;
+  }
+
+  .top-text {
+    font-size: 1rem;
+    margin-bottom: 40px;
+  }
+
+  .color-item {
+    width: 140px;
+  }
+
+  .bottom-text {
+    font-size: 1.05rem;
+  }
+}
+
