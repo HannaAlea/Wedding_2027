@@ -1,8 +1,13 @@
 @font-face {
     font-family: "Gellatio";
-    src: url("./gg.ttf") format("truetype");
+    src: url("./Gellatio Regular.ttf") format("truetype");
     font-weight: 700;
     font-style: normal;
+}
+
+.amp{
+  font-family: "Georgia", serif;
+  font-size: 60px;
 }
 
 
@@ -38,7 +43,7 @@ margin-top:20px;
 }
 
 .names{
-    font-family: "Gellatio";
+    font-family: "Gellatio", cursive;
     font-size: 70px;
 }
 

@@ -1,27 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>RSVP</title>
-
-    <form name="rsvp" method="POST" data-netlify="true">
-
-        <input type="hidden" name="form-name" value="rsvp">
-
-        <label>Name</label>
-        <input type="text" name="name" required>
-
-        <label>Will you attend?</label>
-        <select name="attendance">
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select>
-
-        <button type="submit">Submit RSVP</button>
-
-    </form>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSVP | Hanna & Nathaniel Wedding</title>
 </head>
+
 <body>
+
+<h1>Hanna & Nathaniel</h1>
+<p>Please RSVP for our wedding</p>
+
+<form name="rsvp" method="POST" data-netlify="true" action="/thank-you">
+
+    <input type="hidden" name="form-name" value="rsvp">
+
+    <label for="name">Full Name</label><br>
+    <input type="text" id="name" name="name" required>
+
+    <br><br>
+
+    <label for="attendance">Will you attend?</label><br>
+    <select id="attendance" name="attendance">
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
+
+    <br><br>
+
+    <button type="submit">Submit RSVP</button>
+
+</form>
 
 </body>
 </html>
