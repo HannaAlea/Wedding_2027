@@ -3,108 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hanna & Nathaniel Wedding</title>
-
-    <link rel="stylesheet" href="assets/css/style.css">
+    <meta name="description" content="Hanna & Nathaniel wedding website with details, schedule, venue information, and RSVP.">
+    <title>Hanna & Nathaniel | Wedding</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
-
 <body>
+<div class="site-shell">
+    <header class="topbar" id="home">
+        <a class="brand" href="#home">Hanna <span>&</span> Nathaniel</a>
 
-<header id="home">
-    <h1 class="names">Hanna ۫ ׅ Nathaniel</h1>
-    <p>July 30, 2026 • Spjelkavik Kirke</p>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="siteNav">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
 
-    <h2>We're Getting Married!</h2>
-    <p>We are so excited to celebrate with you.</p>
+        <nav class="nav" id="siteNav">
+            <a href="#story">Our Story</a>
+            <a href="#details">Details</a>
+            <a href="#schedule">Schedule</a>
+            <a href="#venue">Venue</a>
+            <a href="#faq">FAQ</a>
+            <a class="nav-cta" href="rsvp.html">RSVP</a>
+        </nav>
+    </header>
 
-    <a class="button" href="#rsvp">RSVP</a>
+    <main>
+        <section class="hero section">
+            <div class="hero-copy reveal">
+                <p class="eyebrow">30 July 2027 · Ålesund, Norway</p>
+                <h1>We're getting married.</h1>
+                <p class="hero-text">
+                    Join us as we celebrate our love with a day full of faith, family,
+                    laughter, and unforgettable memories.
+                </p>
 
-    <nav>
-        <a href="#home">Home</a>
-        <a href="#ourstory">Our Story</a>
-        <a href="#event-details">Event Details</a>
-        <a href="#schedule">Schedule</a>
-        <a href="#venue">Venue</a>
-        <a href="#rsvp">RSVP</a>
-    </nav>
-</header>
-
-<main>
-    <section class="hero">
-        <section id="event-details" class="section">
-            <h2>Event Details</h2>
-
-            <p><strong>Date:</strong> July 30, 2026</p>
-            <p><strong>Time:</strong> 14:00</p>
-            <p><strong>Ceremony:</strong> Spjelkavik Kirke</p>
-            <p><strong>Reception:</strong> TBA</p>
-        </section>
-    </section>
-
-    <section class="dress-code-section">
-        <div class="dress-overlay"></div>
-
-        <div class="dress-content">
-            <h2>Dress Code</h2>
-
-            <p class="top-text">
-                FORMAL OR SEMI-FORMAL ATTIRE IS REQUESTED AS WE CELEBRATE THIS
-                SPECIAL EVENING TOGETHER.
-            </p>
-
-            <div class="color-row">
-                <div class="color-item">
-                    <div class="color-circle burgundy"></div>
-                    <span>DARK BURGUNDY</span>
+                <div class="hero-actions">
+                    <a class="button primary" href="rsvp.html">Confirm Attendance</a>
+                    <a class="button secondary" href="#details">View Details</a>
                 </div>
 
-                <div class="color-item">
-                    <div class="color-circle wine"></div>
-                    <span>RICH RED WINE</span>
-                </div>
-
-                <div class="color-item">
-                    <div class="color-circle sage"></div>
-                    <span>SAGE GREEN</span>
-                </div>
-
-                <div class="color-item">
-                    <div class="color-circle ivory"></div>
-                    <span>SOFT IVORY / CREAM</span>
-                </div>
-
-                <div class="color-item">
-                    <div class="color-circle beige"></div>
-                    <span>WARM BEIGE / TAUPE</span>
+                <div class="countdown-card">
+                    <p class="countdown-label">Countdown to our day</p>
+                    <div class="countdown" id="countdown">
+                        <div><span id="days">00</span><small>Days</small></div>
+                        <div><span id="hours">00</span><small>Hours</small></div>
+                        <div><span id="minutes">00</span><small>Minutes</small></div>
+                        <div><span id="seconds">00</span><small>Seconds</small></div>
+                    </div>
                 </div>
             </div>
 
-            <p class="bottom-text">
-                WE ENCOURAGE YOU TO DRESS<br>
-                ACCORDING TO OUR COLOR THEME
-            </p>
-        </div>
-    </section>
+            <div class="hero-visual reveal delay-1">
+                <div class="portrait-card large-card">
+                    <div class="art-frame">
+                        <div class="monogram">H <span>&</span> N</div>
+                        <p class="frame-note">With joyful hearts, we invite you to celebrate our wedding.</p>
+                    </div>
+                </div>
 
-    <section id="rsvp" class="section">
+                <div class="floating-note top-note">
+                    <span>Ceremony</span>
+                    <strong>Spjelkavik Kirke · Guests seated by 14:45</strong>
+                </div>
 
-        <h2>RSVP</h2>
-        <p>Please scan the QR code or click the button to respond.</p>
+                <div class="floating-note bottom-note">
+                    <span>Reception</span>
+                    <strong>17:00 · Utvikbygda 540, 6260 Skodje</strong>
+                </div>
+            </div>
+        </section>
 
-        <img src="assets/images/qr-code.png" alt="RSVP QR Code" width="200">
+        <section class="info-strip reveal">
+            <article>
+                <span>Location</span>
+                <strong><a href="https://maps.app.goo.gl/4ZouMnAagEYhzbJ78" target="_blank">Spjelkavik Kyrkje</a></strong>
+            </article>
+            <article>
+                <span>Reception</span>
+                <strong><a href="https://maps.app.goo.gl/1qGiri7LM7XWDf6u6" target="_blank">Utvikbygda</a></strong>
+            </article>
+            <article>
+                <span>Date</span>
+                <strong>Thursday, 30 July 2027</strong>
+            </article>
+            <article>
+                <span>RSVP by</span>
+                <strong>1 June 2026</strong>
+            </article>
+        </section>
 
-        <br><br>
+        <section class="section split-section" id="story">
+            <div class="section-heading reveal">
+                <p class="eyebrow">Our Story</p>
+                <h2>A love story rooted in faith, friendship, and family.</h2>
+            </div>
 
-        <a href="pages/rsvp.html">
-            <button>Go to RSVP</button>
-        </a>
+            <div class="split-grid">
+                <div class="story-card reveal">
+                    <h3>How it started</h3>
+                    <p>
+                        What began as a simple connection grew into a beautiful journey of
+                        love, patience, and shared dreams. Through every season, we have
+                        continued choosing each other.
+                    </p>
+                </div>
+                <div class="story-card reveal delay-1">
+                    <h3>What we value most</h3>
+                    <p>
+                        We treasure faith, kindness, loyalty, and the people who have
+                        supported us along the way. Having you with us on this day means
+                        more than words can say.
+                    </p>
+                </div>
+            </div>
+        </section>
 
-    </section>
-</main>
+        <section class="section story-timeline-section" id="story">
+            <div class="section-heading reveal">
+                <p class="eyebrow">Our Story</p>
+                <h2>A love story rooted in faith, friendship, and family.</h2>
+            </div>
 
-<script src="script.js"></script>
+            <div class="love-timeline">
+                <div class="timeline-line"></div>
+
+                <div class="love-timeline-item reveal">
+                    <div class="timeline-side left">
+                        <div class="story-box">
+                            <h3>How it started</h3>
+                            <p>
+                                What began as a simple connection grew into a beautiful journey of
+                                love, patience, and shared dreams.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-center">
+                        <div class="timeline-photo">
+                            <img src="assets/images/story1.jpg" alt="Hanna and Nathaniel together">
+                        </div>
+                    </div>
+
+                    <div class="timeline-side right"></div>
+                </div>
+
+                <div class="love-timeline-item reveal delay-1">
+                    <div class="timeline-side left"></div>
+
+                    <div class="timeline-center">
+                        <div class="timeline-photo">
+                            <img src="assets/images/story2.jpg" alt="A special memory together">
+                        </div>
+                    </div>
+
+                    <div class="timeline-side right">
+                        <div class="story-box">
+                            <h3>Growing together</h3>
+                            <p>
+                                Through every season, we kept choosing each other, learning,
+                                growing, and building a life centered on love and faith.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="love-timeline-item reveal delay-2">
+                    <div class="timeline-side left">
+                        <div class="story-box">
+                            <h3>What we value most</h3>
+                            <p>
+                                We treasure faith, kindness, loyalty, and the people who have
+                                supported us along the way.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-center">
+                        <div class="timeline-photo">
+                            <img src="assets/images/story3.jpg" alt="Hanna and Nathaniel portrait">
+                        </div>
+                    </div>
+
+                    <div class="timeline-side right"></div>
+                </div>
+
+                <div class="love-timeline-item reveal delay-3">
+                    <div class="timeline-side left"></div>
+
+                    <div class="timeline-center">
+                        <div class="timeline-photo">
+                            <img src="assets/images/story4.jpg" alt="Engagement or wedding memory">
+                        </div>
+                    </div>
+
+                    <div class="timeline-side right">
+                        <div class="story-box">
+                            <h3>Our next chapter</h3>
+                            <p>
+                                Now, with grateful hearts, we are so excited to begin this next
+                                chapter and celebrate it with the people we love most.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="details">
+            <div class="section-heading reveal">
+                <p class="eyebrow">Wedding Details</p>
+                <h2>Everything you need for the celebration.</h2>
+            </div>
+
+            <div class="cards-grid">
+                <article class="glass-card reveal">
+                    <h3>Ceremony</h3>
+                    <p>Spjelkavik Kirke</p>
+                    <p>30 July 2027</p>
+                    <p>Seating starts at 14:45</p>
+                </article>
+
+                <article class="glass-card reveal delay-1">
+                    <h3>Reception</h3>
+                    <p>Venue to be shared soon</p>
+                    <p>Dinner, cake, speeches</p>
+                    <p>Followed by dancing</p>
+                </article>
+
+                <article class="glass-card reveal delay-2">
+                    <h3>Dress Code</h3>
+                    <p>Formal or semi-formal attire</p>
+                    <div class="palette">
+                        <span style="--swatch:#5b2930"></span>
+                        <span style="--swatch:#7b4148"></span>
+                        <span style="--swatch:#a7b79e"></span>
+                        <span style="--swatch:#ece2d7"></span>
+                        <span style="--swatch:#b79f8b"></span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section" id="schedule">
+            <div class="section-heading reveal">
+                <p class="eyebrow">Timeline</p>
+                <h2>A simple overview of the day.</h2>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item reveal">
+                    <div class="time">13:30</div>
+                    <div class="timeline-content">
+                        <h3>Guests arrive</h3>
+                        <p>Please arrive a little early so everyone can be seated before the ceremony begins.</p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal delay-1">
+                    <div class="time">14:00</div>
+                    <div class="timeline-content">
+                        <h3>Ceremony begins</h3>
+                        <p>We will exchange vows and celebrate this meaningful moment together.</p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal delay-2">
+                    <div class="time">16:30</div>
+                    <div class="timeline-content">
+                        <h3>Reception & dinner</h3>
+                        <p>Food, laughter, and heartfelt speeches with family and friends.</p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal delay-3">
+                    <div class="time">20:00</div>
+                    <div class="timeline-content">
+                        <h3>Cake & dancing</h3>
+                        <p>Let the celebration continue with music, photos, and joyful memories.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section split-section" id="venue">
+            <div class="section-heading reveal">
+                <p class="eyebrow">Venue</p>
+                <h2>Save the address and plan your trip early.</h2>
+            </div>
+
+            <div class="venue-layout">
+                <div class="venue-card reveal">
+                    <h3>Spjelkavik Kirke</h3>
+                    <p>Ålesund, Møre og Romsdal</p>
+                    <p>Further reception details will be shared closer to the date.</p>
+                    <a class="text-link" target="_blank" rel="noopener noreferrer" href="https://maps.google.com/?q=Spjelkavik+Kirke">Open in Maps</a>
+                </div>
+
+                <div class="map-card reveal delay-1" aria-hidden="true">
+                    <div class="map-grid"></div>
+                    <div class="map-pin">❤</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="faq">
+            <div class="section-heading reveal">
+                <p class="eyebrow">FAQ</p>
+                <h2>A few helpful answers.</h2>
+            </div>
+
+            <div class="faq-list">
+                <details class="faq-item reveal">
+                    <summary>Can I bring a plus one?</summary>
+                    <p>Please refer to your invitation. If a plus one is included, it will be listed there.</p>
+                </details>
+                <details class="faq-item reveal delay-1">
+                    <summary>Are children invited?</summary>
+                    <p>We kindly ask guests to follow the invitation details for household and family attendance.</p>
+                </details>
+                <details class="faq-item reveal delay-2">
+                    <summary>What if I have dietary restrictions?</summary>
+                    <p>You can let us know on the RSVP form and we will do our best to accommodate you.</p>
+                </details>
+            </div>
+        </section>
+
+        <section class="section cta-section reveal">
+            <p class="eyebrow">Celebrate with us</p>
+            <h2>We would love to know if you can make it.</h2>
+            <p>Please send your RSVP before 1 June 2026.</p>
+            <a class="button primary" href="rsvp.html">Go to RSVP</a>
+        </section>
+    </main>
+</div>
+
+<script src="assets/js/script.js"></script>
 </body>
 </html>

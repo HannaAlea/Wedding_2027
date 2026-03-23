@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSVP | Hanna & Nathaniel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="rsvp-body">
+<main class="rsvp-page">
+  <a class="back-link" href="index.html">← Back to home</a>
+
+  <section class="rsvp-panel">
+    <div class="rsvp-intro">
+      <p class="eyebrow">Hanna & Nathaniel</p>
+      <h1>RSVP</h1>
+      <p>Please let us know if you will be celebrating with us.</p>
+    </div>
+
+    <form class="rsvp-form" name="rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="rsvp">
+      <input type="hidden" name="subject" value="New wedding RSVP submission">
+
+      <p class="hidden-field">
+        <label>Don’t fill this out: <input name="bot-field"></label>
+      </p>
+
+      <div class="field-grid">
+        <label>
+          <span>Full name</span>
+          <input type="text" name="name" placeholder="Your full name" required>
+        </label>
+
+        <label>
+          <span>Email</span>
+          <input type="email" name="email" placeholder="you@example.com" required>
+        </label>
+      </div>
+
+      <div class="field-grid">
+        <label>
+          <span>Will you attend?</span>
+          <select name="attendance" required>
+            <option value="">Choose one</option>
+            <option value="Yes, happily attending">Yes, happily attending</option>
+            <option value="Sorry, cannot attend">Sorry, cannot attend</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Number of guests</span>
+          <select name="guests" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </label>
+      </div>
+
+      <label>
+        <span>Dietary notes</span>
+        <input type="text" name="dietary" placeholder="Allergies or dietary restrictions">
+      </label>
+
+      <label>
+        <span>Message for the couple</span>
+        <textarea name="message" rows="5" placeholder="Write a short message"></textarea>
+      </label>
+
+      <button class="button primary full-width" type="submit">Submit RSVP</button>
+    </form>
+  </section>
+</main>
+
+<script src="assets/js/script.js"></script>
+</body>
+</html>
