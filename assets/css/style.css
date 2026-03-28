@@ -896,8 +896,24 @@ textarea:focus {
   text-align: center;
   cursor: pointer;
   overflow: hidden;
-  background: url("../images/landing-photo.jpg") center/cover no-repeat;
+
   transition: opacity 0.9s ease, visibility 0.9s ease, transform 0.9s ease;
+}
+
+.landing-img {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 1;
+  transition:
+          top 0.8s ease,
+          left 0.8s ease,
+          width 0.8s ease,
+          height 0.8s ease,
+          border-radius 0.8s ease;
 }
 
 .landing-overlay {
@@ -937,4 +953,11 @@ textarea:focus {
 
 body.landing-active {
   overflow: hidden;
+}
+
+.hero-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 34px;
 }

@@ -12,8 +12,11 @@
 </head>
 <body>
 
-<div class="landing-screen" id="landingScreen" role="button" tabindex="0" aria-label="Enter wedding website">
+<div class="landing-screen" id="landingScreen" role="button" tabindex="0">
+    <img src="assets/images/landing-photo.jpg" class="landing-img" id="landingImg">
+
     <div class="landing-overlay"></div>
+
     <div class="landing-content">
         <p class="eyebrow">Hanna & Nathaniel</p>
         <h1>30 July 2027</h1>
@@ -68,11 +71,10 @@
             </div>
 
             <div class="hero-visual reveal delay-1">
-                <div class="portrait-card large-card">
-                    <div class="art-frame">
-                        <div class="monogram">H <span>&</span> N</div>
-                        <p class="frame-note">With joyful hearts, we invite you to celebrate our wedding.</p>
-                    </div>
+                <div class="portrait-card large-card" id="enterTarget">
+                    <img src="assets/images/landing-photo.jpg"
+                         alt="Hanna and Nathaniel"
+                         class="hero-photo">
                 </div>
 
                 <div class="floating-note top-note">

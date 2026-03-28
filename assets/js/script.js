@@ -72,38 +72,49 @@ setInterval(updateCountdown, 1000);
 
 
 const landingScreen = document.getElementById('landingScreen');
+const landingImg = document.getElementById('landingImg');
+const targetCard = document.querySelector('#enterTarget .hero-photo');
 
-if (landingScreen) {
+if (landingScreen && landingImg && targetCard) {
   document.body.classList.add('landing-active');
 
-  let landingClosed = false;
+  let isAnimating = false;
 
-  function closeLanding() {
-    if (landingClosed) return;
-    landingClosed = true;
+  function animateToCard() {
+    if (isAnimating) return;
+    isAnimating = true;
 
-    landingScreen.classList.add('hidden');
-    document.body.classList.remove('landing-active');
+    landingScreen.classList.add('animate');
+
+    const rect = targetCard.getBoundingClientRect();
+
+    // Start fullscreen (already is)
+    landingImg.style.top = '0px';
+    landingImg.style.left = '0px';
+    landingImg.style.width = '100vw';
+    landingImg.style.height = '100vh';
+
+    // force repaint
+    landingImg.getBoundingClientRect();
+
+    // Move directly to card
+    landingImg.style.top = rect.top + 'px';
+    landingImg.style.left = rect.left + 'px';
+    landingImg.style.width = rect.width + 'px';
+    landingImg.style.height = rect.height + 'px';
+    landingImg.style.borderRadius = '34px';
+
+    setTimeout(() => {
+      landingScreen.style.display = 'none';
+      document.body.classList.remove('landing-active');
+    }, 800);
   }
 
-  landingScreen.addEventListener('click', closeLanding);
+  landingScreen.addEventListener('click', animateToCard);
 
-  landingScreen.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      closeLanding();
-    }
-  });
-
-  window.addEventListener('wheel', (event) => {
-    if (!landingClosed && event.deltaY > 0) {
-      closeLanding();
-    }
+  window.addEventListener('wheel', (e) => {
+    if (e.deltaY > 0) animateToCard();
   }, { passive: true });
 
-  window.addEventListener('touchmove', () => {
-    if (!landingClosed) {
-      closeLanding();
-    }
-  }, { passive: true });
+  window.addEventListener('touchmove', animateToCard, { passive: true });
 }
