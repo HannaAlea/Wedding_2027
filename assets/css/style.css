@@ -884,3 +884,57 @@ textarea:focus {
     line-height: 1.6;
   }
 }
+
+
+.landing-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+  background: url("../images/landing-photo.jpg") center/cover no-repeat;
+  transition: opacity 0.9s ease, visibility 0.9s ease, transform 0.9s ease;
+}
+
+.landing-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+          rgba(15, 10, 10, 0.35),
+          rgba(15, 10, 10, 0.65)
+  );
+}
+
+.landing-content {
+  position: relative;
+  z-index: 1;
+  padding: 24px;
+  max-width: 700px;
+}
+
+.landing-content h1 {
+  max-width: none;
+  font-size: clamp(3.5rem, 9vw, 7rem);
+  margin-bottom: 12px;
+}
+
+.landing-text {
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.landing-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(1.03);
+}
+
+body.landing-active {
+  overflow: hidden;
+}

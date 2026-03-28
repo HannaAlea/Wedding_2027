@@ -69,3 +69,41 @@ function updateCountdown() {
 
 updateCountdown();
 setInterval(updateCountdown, 1000);
+
+
+const landingScreen = document.getElementById('landingScreen');
+
+if (landingScreen) {
+  document.body.classList.add('landing-active');
+
+  let landingClosed = false;
+
+  function closeLanding() {
+    if (landingClosed) return;
+    landingClosed = true;
+
+    landingScreen.classList.add('hidden');
+    document.body.classList.remove('landing-active');
+  }
+
+  landingScreen.addEventListener('click', closeLanding);
+
+  landingScreen.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      closeLanding();
+    }
+  });
+
+  window.addEventListener('wheel', (event) => {
+    if (!landingClosed && event.deltaY > 0) {
+      closeLanding();
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', () => {
+    if (!landingClosed) {
+      closeLanding();
+    }
+  }, { passive: true });
+}
