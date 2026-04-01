@@ -40,9 +40,9 @@ body {
   font-family: "Inter", sans-serif;
   color: var(--text);
   background:
-          radial-gradient(circle at top left, rgba(179, 127, 101, 0.22), transparent 30%),
-          radial-gradient(circle at top right, rgba(214, 177, 154, 0.14), transparent 25%),
-          linear-gradient(180deg, #0f0a0a 0%, #140d0d 35%, #0e0909 100%);
+          radial-gradient(circle at top left, rgba(179, 127, 101, 0.32), transparent 38%),
+          radial-gradient(circle at top right, rgba(214, 177, 154, 0.24), transparent 32%),
+          linear-gradient(180deg, #221818 0%, #2a1d1d 35%, #241919 100%);
 }
 
 body::before {
@@ -53,7 +53,7 @@ body::before {
   background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
   background-size: 72px 72px;
   mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
-  opacity: 0.3;
+  opacity: 0.16;
 }
 
 img {
@@ -63,8 +63,9 @@ img {
 
 .site-shell,
 .rsvp-page {
-  width: min(1180px, calc(100% - 32px));
+  width: min(1180px, 100%);
   margin: 0 auto;
+  padding: 0 24px;
 }
 
 .topbar {
@@ -75,8 +76,10 @@ img {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 22px 0;
   backdrop-filter: blur(16px);
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 22px 24px;
 }
 
 .brand,
@@ -135,6 +138,10 @@ img {
 
 .section {
   padding: 70px 0;
+}
+
+.section > * {
+  max-width: 100%;
 }
 
 .hero {
@@ -930,8 +937,8 @@ textarea:focus {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-          rgba(15, 10, 10, 0.35),
-          rgba(15, 10, 10, 0.65)
+          rgba(15, 10, 10, 0.18),
+          rgba(15, 10, 10, 0.35)
   );
 }
 
