@@ -1964,86 +1964,59 @@ body.landing-active {
   padding: 40px 0 100px;
 }
 
-.dresscode-showcase {
-  display: grid;
-  grid-template-columns: 170px 1fr 170px;
-  gap: 24px;
-  align-items: center;
-  margin-top: 40px;
+.dresscode-page .section-heading {
+  text-align: center;
+  margin: 0 auto 20px;
 }
 
-.dresscode-side {
-  position: relative;
+.dresscode-page h1 {
+  max-width: none;
+}
+
+.wedding-palette {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: 38px;
+  margin: 40px auto 60px;
+  flex-wrap: wrap;
 }
 
-/* branch connector */
-.dresscode-side::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: -24px;
-  width: 24px;
-  height: 1px;
-  background: rgba(255,255,255,0.18);
-}
-
-/* COLOR CIRCLE */
-.dresscode-circle {
-  width: 90px;
-  height: 90px;
+.palette-circle {
+  width: 82px;
+  height: 82px;
   border-radius: 999px;
-  margin-bottom: 18px;
-  border: 2px solid rgba(255,255,255,0.12);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+  display: block;
+  border: 2px solid rgba(255,255,255,0.14);
+  box-shadow:
+    inset 0 4px 10px rgba(255,255,255,0.08),
+    0 12px 24px rgba(0,0,0,0.22);
 }
 
-/* DARK BURGUNDY COLOR */
 .burgundy {
-  background: linear-gradient(
-    135deg,
-    #5a1f2a 0%,
-    #4b1f26 40%,
-    #311016 100%
-  );
+  background: linear-gradient(135deg, #6d1f32 0%, #4b1f26 45%, #2d1116 100%);
 }
 
-/* RED WINE COLOR */
 .redwine {
-  background: linear-gradient(
-    135deg,
-    #8d1d24 0%,
-    #70131a 45%,
-    #4a0d12 100%
-  );
+  background: linear-gradient(135deg, #a30d1f 0%, #7c121d 45%, #4d0d14 100%);
 }
 
-.dresscode-side h2 {
-  font-size: 1.9rem;
-  line-height: 0.95;
-  text-align: center;
-  margin-bottom: 18px;
+.sage {
+  background: linear-gradient(135deg, #b0baa5 0%, #93a088 50%, #6d775f 100%);
 }
 
-.dresscode-line {
-  width: 110px;
-  height: 1px;
-  background: rgba(255,255,255,0.18);
-  margin-bottom: 18px;
+.ivory {
+  background: linear-gradient(135deg, #f2eadf 0%, #e7dccd 50%, #d4c4b0 100%);
 }
 
-.dresscode-side p {
-  text-align: center;
-  font-size: 0.95rem;
-  line-height: 1.7;
+.taupe {
+  background: linear-gradient(135deg, #d6c0a5 0%, #bea389 50%, #987a61 100%);
 }
 
 .dresscode-full-image {
   width: 100%;
-  max-width: 560px;
-  margin: 0 auto;
+  max-width: 720px;
+  margin: 50px auto 0;
   display: block;
   border-radius: 26px;
   padding: 18px;
@@ -2055,53 +2028,221 @@ body.landing-active {
   box-shadow: var(--shadow);
 }
 
-.dresscode-bottom-palette {
-  margin-top: 26px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  justify-content: flex-end;
-}
-
-.dresscode-bottom-palette .dresscode-circle {
-  width: 72px;
-  height: 72px;
-  margin-bottom: 0;
-}
-
-.dresscode-bottom-palette h3 {
-  margin-bottom: 12px;
-  font-size: 1.3rem;
-}
-
-.small-line {
-  width: 90px;
-  margin-bottom: 12px;
-}
-
-@media (max-width: 900px) {
-  .dresscode-showcase {
-    grid-template-columns: 1fr;
-    gap: 32px;
+@media (max-width: 768px) {
+  .wedding-palette {
+    gap: 22px;
   }
 
-  .dresscode-side::after {
-    display: none;
-  }
-
-  .dresscode-side {
-    text-align: center;
+  .palette-circle {
+    width: 64px;
+    height: 64px;
   }
 
   .dresscode-full-image {
     max-width: 100%;
   }
+}
+.dresscode-heading {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 28px;
+}
 
-  .dresscode-bottom-palette {
-    justify-content: center;
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.title-row span {
+  width: 135px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(214,177,154,0.9)
+  );
+}
+
+.title-row span:last-child {
+  background: linear-gradient(
+    90deg,
+    rgba(214,177,154,0.9),
+    transparent
+  );
+}
+
+.title-row h1 {
+  max-width: none;
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  color: var(--accent);
+
+  font-size: 0.7rem;
+  margin: 8px 0 10px;
+}
+
+.ornament span {
+  width: 32px;
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(214,177,154,0.8),
+    transparent
+  );
+}
+.dresscode-heading p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin-bottom: 6px;
+}
+
+.dresscode-heading strong {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.palette-wrapper {
+  margin: 38px auto 60px;
+  max-width: 980px;
+
+  padding: 24px 34px;
+
+  border-radius: 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(109, 54, 54, 0.22),
+      rgba(34, 16, 16, 0.45)
+    );
+
+  border: 1px solid rgba(214,177,154,0.28);
+
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+
+  backdrop-filter: blur(14px);
+}
+
+.wedding-palette {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 38px;
+  flex-wrap: wrap;
+}
+
+.palette-item {
+  text-align: center;
+}
+
+.palette-item h4 {
+  margin-top: 14px;
+
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: 1.15rem;
+  font-weight: 500;
+
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+
+  color: #f4ebe4;
+}
+
+.palette-circle {
+  width: 96px;
+  height: 96px;
+
+  border-radius: 999px;
+
+  display: block;
+
+  border: 2px solid rgba(230,205,155,0.8);
+
+  box-shadow:
+    inset 0 6px 12px rgba(255,255,255,0.08),
+    0 12px 24px rgba(0,0,0,0.25);
+}
+
+/* COLORS */
+.burgundy {
+  background: linear-gradient(
+    135deg,
+    #6d1f32 0%,
+    #4b1f26 45%,
+    #2d1116 100%
+  );
+}
+
+.redwine {
+  background: linear-gradient(
+    135deg,
+    #a30d1f 0%,
+    #7c121d 45%,
+    #4d0d14 100%
+  );
+}
+
+.sage {
+  background: linear-gradient(
+    135deg,
+    #b0baa5 0%,
+    #93a088 50%,
+    #6d775f 100%
+  );
+}
+
+.ivory {
+  background: linear-gradient(
+    135deg,
+    #f2eadf 0%,
+    #e7dccd 50%,
+    #d4c4b0 100%
+  );
+}
+
+.taupe {
+  background: linear-gradient(
+    135deg,
+    #d6c0a5 0%,
+    #bea389 50%,
+    #987a61 100%
+  );
+}
+
+@media (max-width: 768px) {
+
+  .palette-wrapper {
+    padding: 22px 18px;
   }
 
-  .left-palette {
-    margin-left: 0;
+  .wedding-palette {
+    gap: 24px;
+  }
+
+  .palette-circle {
+    width: 72px;
+    height: 72px;
+  }
+
+  .palette-item h4 {
+    font-size: 0.95rem;
   }
 }
