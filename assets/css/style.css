@@ -89,9 +89,11 @@ img { max-width: 100%; display: block; }
 .brand,
 .nav a,
 .text-link,
+
 .back-link {
   color: var(--text);
   text-decoration: none;
+
 }
 
 .brand {
