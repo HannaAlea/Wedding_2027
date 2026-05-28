@@ -2230,8 +2230,20 @@ body.landing-active {
 @media (max-width: 768px) {
 
   .palette-wrapper {
-    padding: 22px 18px;
-  }
+  max-width: 980px;
+  margin: 38px auto 60px;
+  padding: 28px 34px;
+
+  border: 1.5px solid rgba(214,177,154,0.45);
+  border-radius: 26px;
+
+  background: rgba(255,255,255,0.035);
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
 
   .wedding-palette {
     gap: 24px;
@@ -2245,4 +2257,41 @@ body.landing-active {
   .palette-item h4 {
     font-size: 0.95rem;
   }
+}
+/* FORMAL ATTIRE SECTION */
+.inspiration-section {
+  margin-top: 70px;
+  text-align: center;
+}
+
+.inspiration-title {
+  margin-bottom: 10px;
+}
+
+.inspiration-title h2 {
+  max-width: none;
+
+  font-size: clamp(1.8rem, 4vw, 3rem);
+
+  letter-spacing: 0.12em;
+  font-weight: 500;
+
+  color: #d6b19a;
+}
+
+.dresscode-full-image {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 40px auto 0;
+
+  display: block;
+
+  border-radius: 0;
+
+  border: none;
+  background: transparent;
+  padding: 0;
+
+  box-shadow: none;
 }
