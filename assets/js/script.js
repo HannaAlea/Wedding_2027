@@ -119,3 +119,26 @@ if (landingScreen && landingImg && targetCard) {
 
   window.addEventListener('touchmove', animateToCard, { passive: true });
 }
+
+const scrollHint = document.getElementById('scrollHint');
+
+if (scrollHint && landingScreen) {
+  // Only hide after landing is gone AND user scrolls down
+  const originalAnimateToCard = animateToCard;
+
+  function onLandingDone() {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) scrollHint.classList.add('hidden');
+    }, { passive: true, once: true });
+  }
+
+  // Hook into the existing setTimeout in animateToCard by watching body class
+  const observer = new MutationObserver(() => {
+    if (!document.body.classList.contains('landing-active')) {
+      onLandingDone();
+      observer.disconnect();
+    }
+  });
+
+  observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+}

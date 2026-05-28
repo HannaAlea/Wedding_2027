@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Hanna & Nathaniel wedding website with details, schedule, venue information, and RSVP.">
-    <title>Hanna & Nathaniel | Wedding</title>
+    <title>Hanna &amp; Nathaniel | Wedding</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,21 +12,25 @@
 </head>
 <body>
 
-<div class="landing-screen" id="landingScreen" role="button" tabindex="0">
-    <img src="assets/images/landing-photo.jpg" class="landing-img" id="landingImg">
-
+<div class="landing-screen" id="landingScreen" role="button" tabindex="0" aria-label="Click or scroll to enter the wedding website">
+    <img src="assets/images/landing-photo.jpg" class="landing-img" id="landingImg" alt="" aria-hidden="true">
     <div class="landing-overlay"></div>
-
     <div class="landing-content">
-        <p class="eyebrow">Hanna & Nathaniel</p>
+        <p class="eyebrow">Hanna &amp; Nathaniel</p>
         <h1>30 July 2027</h1>
         <p class="landing-text">Click or scroll to enter</p>
     </div>
+
+</div>
+
+<div class="scroll-hint" id="scrollHint">
+    <span>Scroll for details</span>
+    <div class="scroll-hint-arrow"></div>
 </div>
 
 <div class="site-shell">
     <header class="topbar" id="home">
-        <a class="brand" href="#home">Hanna <span>&</span> Nathaniel</a>
+        <a class="brand" href="#home">Hanna <span>&amp;</span> Nathaniel</a>
 
         <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="siteNav">
             <span></span>
@@ -34,7 +38,7 @@
             <span></span>
         </button>
 
-        <nav class="nav" id="siteNav">
+        <nav class="nav" id="siteNav" aria-label="Main navigation">
             <a href="#story">Our Story</a>
             <a href="#details">Details</a>
             <a href="#schedule">Schedule</a>
@@ -45,10 +49,10 @@
     </header>
 
     <main>
-        <section class="hero section">
+        <section class="hero section" aria-labelledby="hero-heading">
             <div class="hero-copy reveal">
                 <p class="eyebrow">30 July 2027 · Ålesund, Norway</p>
-                <h1>We're getting married.</h1>
+                <h1 id="hero-heading">We're getting married.</h1>
                 <p class="hero-text">
                     Join us as we celebrate our love with a day full of faith, family,
                     laughter, and unforgettable memories.
@@ -59,7 +63,7 @@
                     <a class="button secondary" href="#details">View Details</a>
                 </div>
 
-                <div class="countdown-card">
+                <div class="countdown-card" aria-label="Countdown to the wedding">
                     <p class="countdown-label">Countdown to our day</p>
                     <div class="countdown" id="countdown">
                         <div><span id="days">00</span><small>Days</small></div>
@@ -70,11 +74,12 @@
                 </div>
             </div>
 
-            <div class="hero-visual reveal delay-1">
+            <div class="hero-visual reveal delay-1" aria-hidden="true">
                 <div class="portrait-card large-card" id="enterTarget">
                     <img src="assets/images/landing-photo.jpg"
                          alt="Hanna and Nathaniel"
-                         class="hero-photo">
+                         class="hero-photo"
+                         width="450" height="560">
                 </div>
 
                 <div class="floating-note top-note">
@@ -89,14 +94,14 @@
             </div>
         </section>
 
-        <section class="info-strip reveal">
+        <section class="info-strip reveal" aria-label="Key wedding details">
             <article>
                 <span>Location</span>
-                <strong><a href="https://maps.app.goo.gl/4ZouMnAagEYhzbJ78" target="_blank">Spjelkavik Kyrkje</a></strong>
+                <strong><a href="https://maps.app.goo.gl/4ZouMnAagEYhzbJ78" target="_blank" rel="noopener noreferrer">Spjelkavik Kyrkje</a></strong>
             </article>
             <article>
                 <span>Reception</span>
-                <strong><a href="https://maps.app.goo.gl/1qGiri7LM7XWDf6u6" target="_blank">Utvikbygda</a></strong>
+                <strong><a href="https://maps.app.goo.gl/1qGiri7LM7XWDf6u6" target="_blank" rel="noopener noreferrer">Utvikbygda</a></strong>
             </article>
             <article>
                 <span>Date</span>
@@ -108,10 +113,10 @@
             </article>
         </section>
 
-        <section class="section split-section" id="story">
+        <section class="section split-section" id="story" aria-labelledby="story-heading">
             <div class="section-heading reveal">
                 <p class="eyebrow">Our Story</p>
-                <h2>A love story rooted in faith, friendship, and family.</h2>
+                <h2 id="story-heading">A love story rooted in faith, friendship, and family.</h2>
             </div>
 
             <div class="split-grid">
@@ -134,14 +139,9 @@
             </div>
         </section>
 
-        <section class="section story-timeline-section">
-            <div class="section-heading reveal">
-                <p class="eyebrow">Our Story</p>
-                <h2>A love story rooted in faith, friendship, and family.</h2>
-            </div>
-
+        <section class="section story-timeline-section" aria-label="Our story timeline">
             <div class="love-timeline">
-                <div class="timeline-line"></div>
+                <div class="timeline-line" aria-hidden="true"></div>
 
                 <div class="love-timeline-item reveal">
                     <div class="timeline-side left">
@@ -153,25 +153,21 @@
                             </p>
                         </div>
                     </div>
-
-                    <div class="timeline-center">
+                    <div class="timeline-center" aria-hidden="true">
                         <div class="timeline-photo">
-                            <img src="assets/images/story1.jpg" alt="Hanna and Nathaniel together">
+                            <img src="assets/images/story1.jpg" alt="Hanna and Nathaniel together" width="150" height="150">
                         </div>
                     </div>
-
                     <div class="timeline-side right"></div>
                 </div>
 
                 <div class="love-timeline-item reveal delay-1">
                     <div class="timeline-side left"></div>
-
-                    <div class="timeline-center">
+                    <div class="timeline-center" aria-hidden="true">
                         <div class="timeline-photo">
-                            <img src="assets/images/story2.jpg" alt="A special memory together">
+                            <img src="assets/images/story2.jpg" alt="A special memory together" width="150" height="150">
                         </div>
                     </div>
-
                     <div class="timeline-side right">
                         <div class="story-box">
                             <h3>Growing together</h3>
@@ -193,25 +189,21 @@
                             </p>
                         </div>
                     </div>
-
-                    <div class="timeline-center">
+                    <div class="timeline-center" aria-hidden="true">
                         <div class="timeline-photo">
-                            <img src="assets/images/story3.jpg" alt="Hanna and Nathaniel portrait">
+                            <img src="assets/images/story3.jpg" alt="Hanna and Nathaniel portrait" width="150" height="150">
                         </div>
                     </div>
-
                     <div class="timeline-side right"></div>
                 </div>
 
                 <div class="love-timeline-item reveal delay-3">
                     <div class="timeline-side left"></div>
-
-                    <div class="timeline-center">
+                    <div class="timeline-center" aria-hidden="true">
                         <div class="timeline-photo">
-                            <img src="assets/images/story4.jpg" alt="Engagement or wedding memory">
+                            <img src="assets/images/story4.jpg" alt="Engagement photo" width="150" height="150">
                         </div>
                     </div>
-
                     <div class="timeline-side right">
                         <div class="story-box">
                             <h3>Our next chapter</h3>
@@ -225,10 +217,10 @@
             </div>
         </section>
 
-        <section class="section" id="details">
+        <section class="section" id="details" aria-labelledby="details-heading">
             <div class="section-heading reveal">
                 <p class="eyebrow">Wedding Details</p>
-                <h2>Everything you need for the celebration.</h2>
+                <h2 id="details-heading">Everything you need for the celebration.</h2>
             </div>
 
             <div class="cards-grid">
@@ -246,71 +238,65 @@
                     <p>Followed by dancing</p>
                 </article>
 
-
-                     <article class="glass-card reveal delay-2">
-
-    <h3>Dress Code</h3>
-
-    <p>Formal or semi-formal attire</p>
-
-    <a href="dresscode.html" class="dresscode-link">
-        Click for more details & inspiration
-    </a>
-
-    <div class="palette">
-        <span style="--swatch:#5b2930"></span>
-        <span style="--swatch:#7b4148"></span>
-        <span style="--swatch:#a7b79e"></span>
-        <span style="--swatch:#ece2d7"></span>
-        <span style="--swatch:#b79f8b"></span>
-    </div>
-
-</article>
+                <article class="glass-card reveal delay-2">
+                    <h3>Dress Code</h3>
+                    <p>Formal or semi-formal attire</p>
+                    <a href="dresscode.html" class="dresscode-link">
+                        Click for more details &amp; inspiration
+                    </a>
+                    <div class="palette" aria-label="Wedding colour palette">
+                        <span style="--swatch:#5b2930" title="Dark Burgundy"></span>
+                        <span style="--swatch:#7b4148" title="Rich Red Wine"></span>
+                        <span style="--swatch:#a7b79e" title="Sage Green"></span>
+                        <span style="--swatch:#ece2d7" title="Soft Ivory"></span>
+                        <span style="--swatch:#b79f8b" title="Warm Taupe"></span>
+                    </div>
+                </article>
             </div>
         </section>
 
-        <section class="section" id="schedule">
+        <section class="section" id="schedule" aria-labelledby="schedule-heading">
             <div class="section-heading reveal">
                 <p class="eyebrow">Timeline</p>
-                <h2>A simple overview of the day.</h2>
+                <h2 id="schedule-heading">A simple overview of the day.</h2>
             </div>
 
             <div class="timeline">
                 <div class="timeline-item reveal">
-                    <div class="time">13:30</div>
+                    <div class="time" aria-label="13:30">13:30</div>
                     <div class="timeline-content">
                         <h3>Guests arrive</h3>
                         <p>Please arrive a little early so everyone can be seated before the ceremony begins.</p>
                     </div>
                 </div>
                 <div class="timeline-item reveal delay-1">
-                    <div class="time">14:00</div>
+                    <div class="time" aria-label="14:00">14:00</div>
                     <div class="timeline-content">
                         <h3>Ceremony begins</h3>
                         <p>We will exchange vows and celebrate this meaningful moment together.</p>
                     </div>
                 </div>
                 <div class="timeline-item reveal delay-2">
-                    <div class="time">16:30</div>
+                    <div class="time" aria-label="16:30">16:30</div>
                     <div class="timeline-content">
-                        <h3>Reception & dinner</h3>
+                        <h3>Reception &amp; dinner</h3>
                         <p>Food, laughter, and heartfelt speeches with family and friends.</p>
                     </div>
                 </div>
                 <div class="timeline-item reveal delay-3">
-                    <div class="time">20:00</div>
+                    <div class="time" aria-label="20:00">20:00</div>
                     <div class="timeline-content">
-                        <h3>Cake & dancing</h3>
+                        <h3>Cake &amp; dancing</h3>
                         <p>Let the celebration continue with music, photos, and joyful memories.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="section split-section" id="venue">
+        <section class="section split-section" id="venue" aria-labelledby="venue-heading">
             <div class="section-heading reveal">
                 <p class="eyebrow">Venue</p>
-                <h2>Save the address and plan your trip early.</h2>
+                <h2 id="venue-heading">Save the address and plan your trip early.</h2>
             </div>
 
             <div class="venue-layout">
@@ -328,10 +314,10 @@
             </div>
         </section>
 
-        <section class="section" id="faq">
+        <section class="section" id="faq" aria-labelledby="faq-heading">
             <div class="section-heading reveal">
                 <p class="eyebrow">FAQ</p>
-                <h2>A few helpful answers.</h2>
+                <h2 id="faq-heading">A few helpful answers.</h2>
             </div>
 
             <div class="faq-list">
@@ -350,17 +336,69 @@
             </div>
         </section>
 
-        <section class="section cta-section reveal">
+        <section class="section cta-section reveal" aria-labelledby="cta-heading">
             <p class="eyebrow">Celebrate with us</p>
-            <h2>We would love to know if you can make it.</h2>
+            <h2 id="cta-heading">We would love to know if you can make it.</h2>
             <p>Please send your RSVP before 1 June 2026.</p>
             <a class="button primary" href="rsvp.html">Go to RSVP</a>
         </section>
     </main>
-</div>
+
+    <footer class="site-footer" aria-label="Site footer">
+        <div class="footer-inner">
+
+            <div class="footer-brand">
+                <p class="footer-monogram" aria-hidden="true">H <span>&amp;</span> N</p>
+                <p class="footer-date">30 · VII · MMXXVII</p>
+                <p class="footer-location">Ålesund, Norway</p>
+            </div>
+
+            <div class="footer-rule" aria-hidden="true">
+                <span></span>
+                <span class="footer-diamond">◆</span>
+                <span></span>
+            </div>
+
+            <nav class="footer-nav" aria-label="Footer navigation">
+                <a href="#story">Our Story</a>
+                <a href="#details">Details</a>
+                <a href="#schedule">Schedule</a>
+                <a href="#venue">Venue</a>
+                <a href="#faq">FAQ</a>
+                <a href="dresscode.html">Dress Code</a>
+                <a href="rsvp.html" class="footer-rsvp-link">RSVP</a>
+            </nav>
+
+            <ul class="footer-pills" aria-label="Key wedding details">
+                <li>
+                    <span class="pill-label">Ceremony</span>
+                    <a href="https://maps.app.goo.gl/4ZouMnAagEYhzbJ78"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="pill-value">Spjelkavik Kirke · 15:00</a>
+                </li>
+                <li>
+                    <span class="pill-label">Reception</span>
+                    <a href="https://maps.app.goo.gl/1qGiri7LM7XWDf6u6"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="pill-value">Utvikbygda · 17:00</a>
+                </li>
+                <li>
+                    <span class="pill-label">RSVP by</span>
+                    <span class="pill-value">1 June 2026</span>
+                </li>
+            </ul>
+
+            <div class="footer-bottom">
+                <p>Made with love for Hanna &amp; Nathaniel &nbsp;·&nbsp; 30 July 2027</p>
+            </div>
+
+        </div>
+    </footer>
+
+</div><!-- /.site-shell -->
 
 <script src="assets/js/script.js"></script>
 </body>
 </html>
-
-
