@@ -13,7 +13,7 @@
 <body>
 
 <div class="landing-screen" id="landingScreen" role="button" tabindex="0" aria-label="Click or scroll to enter the wedding website">
-    <img src="assets/images/landing-photo.jpg" class="landing-img" id="landingImg" alt="" aria-hidden="true">
+    <img src="assets/images/himmel.png" class="landing-img" id="landingImg" alt="" aria-hidden="true">
     <div class="landing-overlay"></div>
     <div class="landing-content">
         <p class="eyebrow">Hanna &amp; Nathaniel</p>
@@ -24,13 +24,15 @@
 </div>
 
 <div class="scroll-hint" id="scrollHint">
+    <a href="#overview" style="display:flex; flex-direction:column; align-items:center; gap:8px; color:inherit; text-decoration:none;">
     <span>Scroll for details</span>
     <div class="scroll-hint-arrow"></div>
+    </a>
 </div>
 
 <div class="site-shell">
     <header class="topbar" id="home">
-        <a class="brand" href="#home">Hanna <span>&amp;</span> Nathaniel</a>
+        <a class="brand" href="#">Hanna <span>&amp;</span> Nathaniel</a>
 
         <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="siteNav">
             <span></span>
@@ -76,7 +78,7 @@
 
             <div class="hero-visual reveal delay-1" aria-hidden="true">
                 <div class="portrait-card large-card" id="enterTarget">
-                    <img src="assets/images/landing-photo.jpg"
+                    <img src="assets/images/himmel.png"
                          alt="Hanna and Nathaniel"
                          class="hero-photo"
                          width="450" height="560">
@@ -94,7 +96,7 @@
             </div>
         </section>
 
-        <section class="info-strip reveal" aria-label="Key wedding details">
+        <section class="info-strip reveal" id="overview" aria-label="Key wedding details">
             <article>
                 <span>Location</span>
                 <strong><a href="https://maps.app.goo.gl/4ZouMnAagEYhzbJ78" target="_blank" rel="noopener noreferrer">Spjelkavik Kyrkje</a></strong>

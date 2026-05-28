@@ -818,8 +818,10 @@ select option { background: #EFE9E3; color: #2C1A0E; }
   position: absolute;
   inset: 0;
   background: linear-gradient(
-          rgba(44, 26, 14, 0.12),
-          rgba(44, 26, 14, 0.40)
+          to top,
+          rgba(10, 5, 2, 0.85) 0%,
+          rgba(10, 5, 2, 0.50) 40%,
+          rgba(10, 5, 2, 0.20) 100%
   );
 }
 
@@ -832,19 +834,25 @@ select option { background: #EFE9E3; color: #2C1A0E; }
 
 .landing-content h1 {
   max-width: none;
-  font-size: clamp(3.5rem, 9vw, 7rem);
-  margin-bottom: 12px;
-  color: #F9F8F6;
+  font-size: clamp(4rem, 10vw, 8rem);
+  margin-bottom: 16px;
+  color: #ffffff;
+  text-shadow: 0 4px 32px rgba(0, 0, 0, 0.90), 0 2px 8px rgba(0, 0, 0, 0.90);
+  font-weight: 700;
 }
 
 .landing-text {
-  font-size: 1rem;
-  letter-spacing: 0.08em;
-  color: rgba(249, 248, 246, 0.80);
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.80);
 }
 
 .landing-content .eyebrow {
-  color: rgba(249, 248, 246, 0.70);
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.70);
+  font-size: 0.9rem;
+  letter-spacing: 0.30em;
 }
 
 .landing-screen.hidden {
@@ -1170,7 +1178,7 @@ a.pill-value:hover {
   font-size: 0.78rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  pointer-events: none;
+  pointer-events: auto;
   transition: opacity 0.5s ease;
 }
 
@@ -1189,4 +1197,8 @@ a.pill-value:hover {
 @keyframes bounce-arrow {
   0%, 100% { transform: rotate(45deg) translateY(0); }
   50%       { transform: rotate(45deg) translateY(5px); }
+}
+
+#overview {
+  scroll-margin-top: 120px;
 }
