@@ -90,6 +90,7 @@ img { max-width: 100%; display: block; }
 .nav a,
 .text-link,
 
+
 .back-link {
   color: var(--text);
   text-decoration: none;
@@ -527,8 +528,11 @@ summary::-webkit-details-marker { display: none; }
   background: var(--bg);
 }
 
-.rsvp-page    { padding: 36px 0; }
-.back-link    { margin-bottom: 18px; }
+.rsvp-page .back-link {
+  display: block;
+  max-width: 860px;
+  margin: 0 auto 18px;
+}
 
 .rsvp-panel {
   max-width: 860px;
