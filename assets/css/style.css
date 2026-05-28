@@ -442,7 +442,7 @@ p {
 }
 
 /* ── VENUE ── */
-.venue-layout { grid-template-columns: 0.95fr 1.05fr; }
+.venue-layout { grid-template-columns: 1fr 1fr; }
 
 .map-card {
   min-height: 360px;
