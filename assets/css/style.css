@@ -370,19 +370,30 @@ p {
   position: absolute;
   padding: 16px 18px;
   border-radius: 22px;
-  background: var(--bg-soft);
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  box-shadow:
+          0 8px 32px rgba(44, 26, 14, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .floating-note span {
   display: block;
   font-size: 0.8rem;
-  color: var(--muted);
+  color: rgba(44, 26, 14, 0.85);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin-bottom: 4px;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.4);
 }
 
-.floating-note strong { font-size: 1rem; color: var(--text); }
+.floating-note strong {
+  font-size: 1rem;
+  color: #2C1A0E;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.4);
+}
 
 .top-note    { top: 70px; left: 0; }
 .bottom-note { right: 0; bottom: 70px; }
