@@ -155,28 +155,24 @@ if (scrollHint && landingScreen) {
     });
   }
 
-  // Only hide after landing is gone AND user scrolls down
-  function onLandingDone() {
-    // If the page is already scrolled past the threshold the moment landing
-    // finishes, hide immediately instead of waiting for a scroll event that
-    // may never come (e.g. no scroll event fires from a zoom gesture).
-    if (window.scrollY > 40) {
+  // Hide the hint once the landing overlay is gone AND the user has
+  // actually scrolled down. This is deliberately NOT a one-shot listener
+  // tied to the exact moment the overlay clears: on mobile, `body`'s
+  // overflow:hidden blocks real scrolling for the full 800ms dismiss
+  // animation, and a single swipe is usually shorter than that — the
+  // finger lifts before the page is scrollable, so no further scroll
+  // event ever arrives to satisfy a one-shot listener. Checking on every
+  // scroll event (and detaching once satisfied) works regardless of when,
+  // or in how many separate gestures, the actual scroll happens.
+  function checkHideHint() {
+    if (
+        !document.body.classList.contains('landing-active') &&
+        window.scrollY > 40
+    ) {
       scrollHint.classList.add('hidden');
-      return;
+      window.removeEventListener('scroll', checkHideHint);
     }
-
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 40) scrollHint.classList.add('hidden');
-    }, { passive: true, once: true });
   }
 
-  // Hook into the existing setTimeout in animateToCard by watching body class
-  const observer = new MutationObserver(() => {
-    if (!document.body.classList.contains('landing-active')) {
-      onLandingDone();
-      observer.disconnect();
-    }
-  });
-
-  observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  window.addEventListener('scroll', checkHideHint, { passive: true });
 }
