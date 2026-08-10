@@ -1234,12 +1234,22 @@ a.pill-value:hover {
   font-size: 0.78rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
+  text-align: center;
   pointer-events: auto;
   transition: opacity 0.5s ease;
 }
 
 
 .scroll-hint.hidden { opacity: 0; }
+
+@media (max-width: 480px) {
+  .scroll-hint {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    bottom: 28px;
+    padding: 0 16px;
+  }
+}
 
 .scroll-hint-arrow {
   width: 20px;
