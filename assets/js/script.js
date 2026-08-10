@@ -126,9 +126,32 @@ if (landingScreen && landingImg && targetCard) {
 const scrollHint = document.getElementById('scrollHint');
 
 if (scrollHint && landingScreen) {
-  // Only hide after landing is gone AND user scrolls down
-  const originalAnimateToCard = animateToCard;
+  // Clicking the hint's link only jumped to #overview before — it never
+  // dismissed the landing screen, since the link isn't a child of
+  // landingScreen and doesn't fire the click/wheel/touchmove listeners above.
+  // Dismiss the landing screen first, then scroll to the target once it's done.
+  const scrollHintLink = scrollHint.querySelector('a');
 
+  if (scrollHintLink) {
+    scrollHintLink.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const targetSelector = scrollHintLink.getAttribute('href');
+      const targetEl = targetSelector ? document.querySelector(targetSelector) : null;
+
+      if (typeof animateToCard === 'function') {
+        animateToCard();
+      }
+
+      // Matches the 800ms landing-dismissal timer in animateToCard, plus a
+      // small buffer, so the page is scrollable before we scroll it.
+      setTimeout(() => {
+        if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });
+      }, 820);
+    });
+  }
+
+  // Only hide after landing is gone AND user scrolls down
   function onLandingDone() {
     // If the page is already scrolled past the threshold the moment landing
     // finishes, hide immediately instead of waiting for a scroll event that
