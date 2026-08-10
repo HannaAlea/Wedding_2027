@@ -76,12 +76,18 @@ const landingScreen = document.getElementById('landingScreen');
 const landingImg = document.getElementById('landingImg');
 const targetCard = document.querySelector('#enterTarget .hero-photo');
 
+// Declared here (not inside the block below) so the scroll-hint handler
+// further down can reliably call it. Relying on function declarations
+// inside an `if` block to be visible outside it depends on legacy
+// "Annex B" hoisting rules that only apply in non-strict scripts —
+// declaring it explicitly avoids that fragility.
+let animateToCard = null;
+let isAnimating = false;
+
 if (landingScreen && landingImg && targetCard) {
   document.body.classList.add('landing-active');
 
-  let isAnimating = false;
-
-  function animateToCard() {
+  animateToCard = function () {
     if (isAnimating) return;
     isAnimating = true;
 
@@ -109,7 +115,7 @@ if (landingScreen && landingImg && targetCard) {
       landingScreen.style.display = 'none';
       document.body.classList.remove('landing-active');
     }, 800);
-  }
+  };
 
   landingScreen.addEventListener('click', animateToCard);
 
@@ -139,7 +145,14 @@ if (scrollHint && landingScreen) {
       const targetSelector = scrollHintLink.getAttribute('href');
       const targetEl = targetSelector ? document.querySelector(targetSelector) : null;
 
-      if (typeof animateToCard === 'function') {
+      if (landingScreen.style.display === 'none') {
+        // Landing screen was already dismissed earlier (e.g. the user
+        // scrolled with the wheel first) — nothing to wait on, scroll now.
+        if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+
+      if (animateToCard) {
         animateToCard();
       }
 

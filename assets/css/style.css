@@ -1240,7 +1240,10 @@ a.pill-value:hover {
 }
 
 
-.scroll-hint.hidden { opacity: 0; }
+.scroll-hint.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
 
 @media (max-width: 480px) {
   .scroll-hint {
