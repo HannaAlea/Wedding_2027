@@ -114,6 +114,9 @@ if (landingScreen && landingImg && targetCard) {
   landingScreen.addEventListener('click', animateToCard);
 
   window.addEventListener('wheel', (e) => {
+    // Ignore pinch-to-zoom / Ctrl+scroll zoom gestures — these also fire
+    // wheel events with a positive deltaY and should not dismiss the landing screen.
+    if (e.ctrlKey || e.metaKey) return;
     if (e.deltaY > 0) animateToCard();
   }, { passive: true });
 
@@ -127,6 +130,14 @@ if (scrollHint && landingScreen) {
   const originalAnimateToCard = animateToCard;
 
   function onLandingDone() {
+    // If the page is already scrolled past the threshold the moment landing
+    // finishes, hide immediately instead of waiting for a scroll event that
+    // may never come (e.g. no scroll event fires from a zoom gesture).
+    if (window.scrollY > 40) {
+      scrollHint.classList.add('hidden');
+      return;
+    }
+
     window.addEventListener('scroll', () => {
       if (window.scrollY > 40) scrollHint.classList.add('hidden');
     }, { passive: true, once: true });
