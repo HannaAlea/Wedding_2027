@@ -132,35 +132,26 @@ if (landingScreen && landingImg && targetCard) {
 const scrollHint = document.getElementById('scrollHint');
 
 if (scrollHint && landingScreen) {
-  // Clicking the hint's link only jumped to #overview before — it never
-  // dismissed the landing screen, since the link isn't a child of
-  // landingScreen and doesn't fire the click/wheel/touchmove listeners above.
-  // Dismiss the landing screen first, then scroll to the target once it's done.
+  // Clicking the hint used to jump straight to #overview, which skipped
+  // right over the hero section (headline, countdown, CTA buttons) the
+  // instant the landing overlay cleared — the hero is already sitting at
+  // scroll position 0 underneath the overlay, so nothing needs to be
+  // scrolled to reveal it. Clicking now only dismisses the overlay.
   const scrollHintLink = scrollHint.querySelector('a');
 
   if (scrollHintLink) {
     scrollHintLink.addEventListener('click', (e) => {
       e.preventDefault();
 
-      const targetSelector = scrollHintLink.getAttribute('href');
-      const targetEl = targetSelector ? document.querySelector(targetSelector) : null;
-
       if (landingScreen.style.display === 'none') {
-        // Landing screen was already dismissed earlier (e.g. the user
-        // scrolled with the wheel first) — nothing to wait on, scroll now.
-        if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });
+        // Already dismissed (e.g. user scrolled with the wheel first) —
+        // nothing to do.
         return;
       }
 
       if (animateToCard) {
         animateToCard();
       }
-
-      // Matches the 800ms landing-dismissal timer in animateToCard, plus a
-      // small buffer, so the page is scrollable before we scroll it.
-      setTimeout(() => {
-        if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });
-      }, 820);
     });
   }
 
