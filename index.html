@@ -25,8 +25,8 @@
 
 <div class="scroll-hint" id="scrollHint">
     <a href="#overview" style="display:flex; flex-direction:column; align-items:center; gap:8px; color:inherit; text-decoration:none;">
-    <span>Scroll for details</span>
-    <div class="scroll-hint-arrow"></div>
+        <span>Scroll for details</span>
+        <div class="scroll-hint-arrow"></div>
     </a>
 </div>
 
@@ -115,107 +115,88 @@
             </article>
         </section>
 
-        <section class="section split-section" id="story" aria-labelledby="story-heading">
+        <section class="story section-shell" id="story" aria-labelledby="storyTitle">
             <div class="section-heading reveal">
-                <p class="eyebrow">Our Story</p>
-                <h2 id="story-heading">A love story rooted in faith, friendship, and family.</h2>
+                <p class="kicker eyebrow">Our Story</p>
+                <h2 id="storyTitle">The moments that led us here.</h2>
+                <p>These entries are intentionally easy to replace later with your real photos, dates, and stories.</p>
             </div>
 
-            <div class="split-grid">
-                <div class="story-card reveal">
-                    <h3>How it started</h3>
-                    <p>
-                        What began as a simple connection grew into a beautiful journey of
-                        love, patience, and shared dreams. Through every season, we have
-                        continued choosing each other.
-                    </p>
-                </div>
-                <div class="story-card reveal delay-1">
-                    <h3>What we value most</h3>
-                    <p>
-                        We treasure faith, kindness, loyalty, and the people who have
-                        supported us along the way. Having you with us on this day means
-                        more than words can say.
-                    </p>
-                </div>
-            </div>
-        </section>
+            <div class="story-timeline">
+                <div class="story-line" aria-hidden="true"></div>
 
-        <section class="section story-timeline-section" aria-label="Our story timeline">
-            <div class="love-timeline">
-                <div class="timeline-line" aria-hidden="true"></div>
+                <article class="story-item reveal">
+                    <div class="story-marker">01</div>
+                    <div class="story-content">
+                        <p class="story-date">Chapter One</p>
+                        <h3>The Beginning</h3>
+                        <p>How we first met, the small moment that started everything, and the beginning of a friendship that became something more.</p>
+                    </div>
+                    <div class="story-photo placeholder-photo" role="img" aria-label="Photo placeholder for The Beginning">
+                        <span>Add photo</span>
+                    </div>
+                </article>
 
-                <div class="love-timeline-item reveal">
-                    <div class="timeline-side left">
-                        <div class="story-box">
-                            <h3>How it started</h3>
-                            <p>
-                                What began as a simple connection grew into a beautiful journey of
-                                love, patience, and shared dreams.
-                            </p>
-                        </div>
+                <article class="story-item reverse reveal delay-1">
+                    <div class="story-marker">02</div>
+                    <div class="story-content">
+                        <p class="story-date">Chapter Two</p>
+                        <h3>First Date</h3>
+                        <p>A favorite memory from our first date — the conversation, laughter, and details we still remember.</p>
                     </div>
-                    <div class="timeline-center" aria-hidden="true">
-                        <div class="timeline-photo">
-                            <img src="assets/images/story1.jpg" alt="Hanna and Nathaniel together" width="150" height="150">
-                        </div>
+                    <div class="story-photo placeholder-photo" role="img" aria-label="Photo placeholder for First Date">
+                        <span>Add photo</span>
                     </div>
-                    <div class="timeline-side right"></div>
-                </div>
+                </article>
 
-                <div class="love-timeline-item reveal delay-1">
-                    <div class="timeline-side left"></div>
-                    <div class="timeline-center" aria-hidden="true">
-                        <div class="timeline-photo">
-                            <img src="assets/images/story2.jpg" alt="A special memory together" width="150" height="150">
-                        </div>
+                <article class="story-item reveal delay-2">
+                    <div class="story-marker">03</div>
+                    <div class="story-content">
+                        <p class="story-date">Chapter Three</p>
+                        <h3>Growing Together</h3>
+                        <p>Trips, milestones, ordinary days, and the moments that taught us how good life can be when shared.</p>
                     </div>
-                    <div class="timeline-side right">
-                        <div class="story-box">
-                            <h3>Growing together</h3>
-                            <p>
-                                Through every season, we kept choosing each other, learning,
-                                growing, and building a life centered on love and faith.
-                            </p>
-                        </div>
+                    <div class="story-photo placeholder-photo" role="img" aria-label="Photo placeholder for Growing Together">
+                        <span>Add photo</span>
                     </div>
-                </div>
+                </article>
 
-                <div class="love-timeline-item reveal delay-2">
-                    <div class="timeline-side left">
-                        <div class="story-box">
-                            <h3>What we value most</h3>
-                            <p>
-                                We treasure faith, kindness, loyalty, and the people who have
-                                supported us along the way.
-                            </p>
-                        </div>
+                <article class="story-item reverse reveal delay-3">
+                    <div class="story-marker">04</div>
+                    <div class="story-content">
+                        <p class="story-date">The Proposal</p>
+                        <h3>She said yes.</h3>
+                        <p>A moment we will always carry with us — the question, the surprise, and the beginning of our next chapter.</p>
                     </div>
-                    <div class="timeline-center" aria-hidden="true">
-                        <div class="timeline-photo">
-                            <img src="assets/images/story3.jpg" alt="Hanna and Nathaniel portrait" width="150" height="150">
-                        </div>
+                    <div class="story-photo actual-photo">
+                        <img src="assets/images/engagement.png" width="640" height="853" loading="lazy" decoding="async" alt="Nathaniel proposing to Hanna">
                     </div>
-                    <div class="timeline-side right"></div>
-                </div>
+                </article>
 
-                <div class="love-timeline-item reveal delay-3">
-                    <div class="timeline-side left"></div>
-                    <div class="timeline-center" aria-hidden="true">
-                        <div class="timeline-photo">
-                            <img src="assets/images/story4.jpg" alt="Engagement photo" width="150" height="150">
-                        </div>
+                <article class="story-item reveal">
+                    <div class="story-marker">05</div>
+                    <div class="story-content">
+                        <p class="story-date">The Next Chapter</p>
+                        <h3>Toward forever.</h3>
+                        <p>Wedding planning, dreaming together, and counting down to the day we become husband and wife.</p>
                     </div>
-                    <div class="timeline-side right">
-                        <div class="story-box">
-                            <h3>Our next chapter</h3>
-                            <p>
-                                Now, with grateful hearts, we are so excited to begin this next
-                                chapter and celebrate it with the people we love most.
-                            </p>
-                        </div>
+                    <div class="story-photo placeholder-photo" role="img" aria-label="Photo placeholder for The Next Chapter">
+                        <span>Add photo</span>
                     </div>
-                </div>
+                </article>
+
+                <article class="story-item final reverse reveal delay-1">
+                    <div class="story-marker">♥</div>
+                    <div class="story-content">
+                        <p class="story-date">July 30, 2027</p>
+                        <h3>Our Wedding Day</h3>
+                        <p>The next part of our story begins with all of you beside us.</p>
+                    </div>
+                    <div class="story-photo wedding-date-card" aria-hidden="true">
+                        <span>30</span>
+                        <small>07 · 2027</small>
+                    </div>
+                </article>
             </div>
         </section>
 
