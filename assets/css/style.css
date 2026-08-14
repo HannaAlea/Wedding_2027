@@ -720,34 +720,34 @@ select option { background: #EFE9E3; color: #2C1A0E; }
 
   .floating-note {
     position: absolute;
-    left: 20px;
-    right: 20px;
+    left: 14px;
+    right: 14px;
     width: auto;
     margin-top: 0;
-    padding: 10px 14px;
-    border-radius: 16px;
+    padding: 7px 10px;
+    border-radius: 12px;
   }
 
   .floating-note span {
-    font-size: 0.62rem;
-    letter-spacing: 0.09em;
-    margin-bottom: 2px;
+    font-size: 0.52rem;
+    letter-spacing: 0.06em;
+    margin-bottom: 1px;
   }
 
   .floating-note strong {
-    font-size: 0.8rem;
-    line-height: 1.25;
+    font-size: 0.68rem;
+    line-height: 1.2;
   }
 
   .top-note {
-    top: 20px;
-    left: 20px;
+    top: 14px;
+    left: 14px;
     bottom: auto;
   }
 
   .bottom-note {
-    bottom: 20px;
-    right: 20px;
+    bottom: 14px;
+    right: 14px;
     top: auto;
   }
 
