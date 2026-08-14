@@ -176,3 +176,79 @@ if (scrollHint && landingScreen) {
 
   window.addEventListener('scroll', checkHideHint, { passive: true });
 }
+
+// ── IMAGE LIGHTBOX (click to zoom) ──
+// Any <img class="zoomable"> pops up centered/enlarged on click, and
+// shrinks back on a second click (on the image, the dark backdrop, or Esc).
+const zoomableImages = document.querySelectorAll('.zoomable');
+
+if (zoomableImages.length) {
+  const overlay = document.createElement('div');
+  overlay.className = 'lightbox-overlay';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-hidden', 'true');
+
+  const overlayImg = document.createElement('img');
+  overlay.appendChild(overlayImg);
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'lightbox-close';
+  closeBtn.type = 'button';
+  closeBtn.setAttribute('aria-label', 'Close zoomed image');
+  closeBtn.textContent = '\u00d7'; // ×
+  overlay.appendChild(closeBtn);
+
+  document.body.appendChild(overlay);
+
+  let lastFocused = null;
+
+  function openLightbox(sourceImg) {
+    overlayImg.src = sourceImg.currentSrc || sourceImg.src;
+    overlayImg.alt = sourceImg.alt || '';
+    lastFocused = sourceImg;
+
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('lightbox-open');
+    closeBtn.focus();
+  }
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('lightbox-open');
+
+    if (lastFocused) {
+      lastFocused.focus({ preventScroll: true });
+    }
+  }
+
+  zoomableImages.forEach((img) => {
+    img.setAttribute('tabindex', '0');
+    img.setAttribute('role', 'button');
+    img.setAttribute('aria-label', 'Click to zoom image');
+
+    img.addEventListener('click', () => openLightbox(img));
+    img.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openLightbox(img);
+      }
+    });
+  });
+
+  // Clicking anywhere on the overlay (backdrop or the zoomed image
+  // itself) closes it again — this is the "click again to go back" step.
+  overlay.addEventListener('click', closeLightbox);
+  closeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeLightbox();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+}
