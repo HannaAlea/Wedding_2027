@@ -52,8 +52,8 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-          linear-gradient(rgba(44,26,14,0.022) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(44,26,14,0.022) 1px, transparent 1px);
+          linear-gradient(rgba(44,26,14,0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(44,26,14,0.05) 1px, transparent 1px);
   background-size: 72px 72px;
   mask-image: radial-gradient(ellipse at center, black 30%, transparent 85%);
   opacity: 1;
@@ -751,8 +751,12 @@ select option { background: #EFE9E3; color: #2C1A0E; }
     top: auto;
   }
 
-  .countdown { grid-template-columns: repeat(2, 1fr); }
-  .countdown-card { width: 100%; }
+  .countdown { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .countdown-card { width: 100%; padding: 14px 16px; border-radius: 18px; }
+  .countdown-label { font-size: 0.78rem; margin-bottom: 8px; }
+  .countdown div { padding: 10px 8px; border-radius: 14px; }
+  .countdown span { font-size: 1.4rem; }
+  .countdown small { font-size: 0.66rem; }
 
   .button, .hero-actions { width: 100%; }
   .hero-actions .button  { flex: 1 1 100%; }
