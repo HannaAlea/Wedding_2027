@@ -282,6 +282,7 @@ p {
   font-size: 0.9rem;
   color: var(--muted);
   margin-bottom: 12px;
+  text-align: center;
 }
 
 .countdown {
