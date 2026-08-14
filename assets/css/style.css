@@ -282,7 +282,6 @@ p {
   font-size: 0.9rem;
   color: var(--muted);
   margin-bottom: 12px;
-  text-align: center;
 }
 
 .countdown {
@@ -668,12 +667,17 @@ select option { background: #EFE9E3; color: #2C1A0E; }
   .hero { min-height: auto; padding-top: 28px; }
   .hero-visual { min-height: 520px; }
 
-  .timeline-item { grid-template-columns: 1fr; }
+  .timeline-item {
+    grid-template-columns: 64px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
 
   .time {
     text-align: left;
-    padding-top: 0;
-    padding-left: 4px;
+    padding-top: 4px;
+    padding-left: 0;
+    font-size: 1.35rem;
   }
 
   .nav {
@@ -758,6 +762,10 @@ select option { background: #EFE9E3; color: #2C1A0E; }
   .countdown div { padding: 10px 8px; border-radius: 14px; }
   .countdown span { font-size: 1.4rem; }
   .countdown small { font-size: 0.66rem; }
+
+  .timeline-item { grid-template-columns: 54px 1fr; gap: 10px; }
+  .time { font-size: 1.15rem; padding-top: 4px; }
+  .timeline-content { padding: 16px; }
 
   .button, .hero-actions { width: 100%; }
   .hero-actions .button  { flex: 1 1 100%; }
