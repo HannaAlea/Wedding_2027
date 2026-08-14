@@ -716,13 +716,40 @@ select option { background: #EFE9E3; color: #2C1A0E; }
 
   .large-card { height: 430px; }
 
+  .hero-visual { display: block; min-height: auto; position: relative; }
+
   .floating-note {
-    position: static;
-    width: 100%;
-    margin-top: 12px;
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    width: auto;
+    margin-top: 0;
+    padding: 10px 14px;
+    border-radius: 16px;
   }
 
-  .hero-visual { display: block; min-height: auto; }
+  .floating-note span {
+    font-size: 0.62rem;
+    letter-spacing: 0.09em;
+    margin-bottom: 2px;
+  }
+
+  .floating-note strong {
+    font-size: 0.8rem;
+    line-height: 1.25;
+  }
+
+  .top-note {
+    top: 20px;
+    left: 20px;
+    bottom: auto;
+  }
+
+  .bottom-note {
+    bottom: 20px;
+    right: 20px;
+    top: auto;
+  }
 
   .countdown { grid-template-columns: repeat(2, 1fr); }
   .countdown-card { width: 100%; }
