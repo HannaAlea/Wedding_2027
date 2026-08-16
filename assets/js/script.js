@@ -252,3 +252,21 @@ if (zoomableImages.length) {
     }
   });
 }
+
+const attirePopTitles = document.querySelectorAll('.attire-pop');
+
+if (attirePopTitles.length) {
+  const attirePopObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('show');
+      } else {
+        entry.target.classList.remove('show');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  attirePopTitles.forEach(title => {
+    attirePopObserver.observe(title);
+  });
+}
