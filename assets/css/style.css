@@ -1204,8 +1204,8 @@ body.landing-active { overflow: hidden; }
 
 .attire-image {
   width: 100%;
-  height: auto;
-  object-fit: contain;
+  height: 650px;
+  object-fit: center bottom;
   display: block;
   border-radius: 16px;
   cursor: pointer;
