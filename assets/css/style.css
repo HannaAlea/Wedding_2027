@@ -1,10 +1,10 @@
 /* ============================================================
-   PALETTE
-   #F9F8F6  – warm white (page bg)
-   #EFE9E3  – soft linen (cards, sections)
-   #D9CFC7  – warm stone (borders, dividers)
-   #C9B59C  – sandy caramel (accents, highlights)
-   Text: #2C1A0E (deep warm brown for contrast)
+   COLORS WE USE
+   #F9F8F6 is the warm white color for the page background
+   #EFE9E3 is a soft light color for cards and sections
+   #D9CFC7 is a warm stone color for borders and lines
+   #C9B59C is a caramel color for accents and highlights
+   Text color is #2C1A0E, its a dark brown so it looks good on the light background
    ============================================================ */
 
 :root {
@@ -23,7 +23,7 @@
   --radius:      28px;
 }
 
-/* ── Scroll anchors ── */
+/* these are the spots the page jumps to when someone clicks a nav link */
 #story, #details, #schedule, #venue, #faq, #home {
   scroll-margin-top: 60px;
 }
@@ -45,7 +45,7 @@ body {
           radial-gradient(ellipse at bottom right, rgba(217,207,199,0.45) 0%, transparent 55%);
 }
 
-/* Subtle paper texture overlay */
+/* adds a light texture on top so the background isnt too plain */
 body::before {
   content: "";
   position: fixed;
@@ -69,7 +69,7 @@ img { max-width: 100%; display: block; }
   padding: 0 24px;
 }
 
-/* ── TOPBAR ── */
+/* styles for the top navigation bar */
 .topbar {
   position: sticky;
   top: 0;
@@ -78,7 +78,7 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  /* Glassmorphism — skill spec: blur 15px, rgba white 15%, 1px light border */
+  /* this makes the glassy blurry look. blur is 15px, white is at 15%, and theres a thin light border */
   backdrop-filter: blur(18px) saturate(1.6);
   -webkit-backdrop-filter: blur(18px) saturate(1.6);
   background: rgba(249, 246, 241, 0.55);
@@ -86,9 +86,8 @@ img { max-width: 100%; display: block; }
   box-shadow:
           0 1px 0 rgba(255, 255, 255, 0.60) inset,
           0 4px 24px rgba(44, 26, 14, 0.07);
-  /* Full-bleed: break out of .site-shell's max-width so the bar itself
-     spans edge to edge, while padding keeps the brand/nav content
-     sitting at the same 1180px-centered position as before. */
+  /* this makes the bar stretch across the whole screen. the padding keeps
+     everything lined up in the middle like before. */
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
@@ -168,7 +167,7 @@ img { max-width: 100%; display: block; }
   display: block;
 }
 
-/* ── SECTIONS ── */
+/* basic section spacing */
 .section { padding: 70px 0; }
 .section > * { max-width: 100%; }
 
@@ -250,7 +249,7 @@ p {
 
 .secondary:hover { background: rgba(44, 26, 14, 0.05); }
 
-/* ── SHARED CARD STYLES ── */
+/* styles that all the cards share, like the countdown card, glass card, and stuff */
 .countdown-card,
 .glass-card,
 .story-card,
@@ -270,7 +269,7 @@ p {
   box-shadow: var(--shadow);
 }
 
-/* ── COUNTDOWN ── */
+/* the countdown timer box */
 .countdown-card {
   width: fit-content;
   padding: 20px 22px;
@@ -309,7 +308,7 @@ p {
 
 .countdown small { color: var(--muted); font-size: 0.78rem; }
 
-/* ── HERO VISUAL ── */
+/* the big photo area on the home page */
 .hero-visual {
   position: relative;
   min-height: 620px;
@@ -333,7 +332,7 @@ p {
   position: relative;
 }
 
-/* Mat border — inner inset line like a real picture frame */
+/* this is like the inside line of a picture frame */
 .large-card::before {
   content: "";
   position: absolute;
@@ -344,7 +343,7 @@ p {
   z-index: 2;
 }
 
-/* Corner accent marks */
+/* little lines in the corners just for looks */
 .large-card::after {
   content: "";
   position: absolute;
@@ -407,7 +406,7 @@ p {
 .top-note    { top: 70px; left: 0; }
 .bottom-note { right: 0; bottom: 70px; }
 
-/* ── INFO STRIP ── */
+/* the row of info boxes, like location and date */
 .info-strip {
   border-radius: var(--radius);
   padding: 20px;
@@ -435,7 +434,7 @@ p {
 .info-strip strong { font-size: 1rem; color: var(--text); }
 .info-strip a { color: var(--text); font-weight: 600; }
 
-/* ── SECTION HEADINGS ── */
+/* the titles at the top of each section */
 .section-heading { max-width: 700px; margin-bottom: 32px; }
 
 .split-grid,
@@ -459,7 +458,7 @@ p {
   background: var(--bg-soft);
 }
 
-/* ── COLOUR SWATCHES ── */
+/* the little color circles for the dress code palette */
 .palette {
   display: flex;
   gap: 10px;
@@ -474,7 +473,7 @@ p {
   border: 1.5px solid rgba(44,26,14,0.16);
 }
 
-/* ── SCHEDULE TIMELINE ── */
+/* the timeline for the wedding day schedule */
 .timeline { display: grid; gap: 16px; }
 
 .timeline-item {
@@ -498,7 +497,7 @@ p {
   background: var(--bg-soft);
 }
 
-/* ── VENUE ── */
+/* the venue section with the maps */
 .venue-layout { grid-template-columns: 1fr 1fr; }
 
 .map-card {
@@ -529,7 +528,7 @@ p {
   color: var(--accent-deep);
 }
 
-/* ── FAQ ── */
+/* the faq dropdown list */
 .faq-list { display: grid; gap: 14px; }
 
 .faq-item {
@@ -549,7 +548,7 @@ summary {
 summary::-webkit-details-marker { display: none; }
 .faq-item p { padding-bottom: 22px; }
 
-/* ── CTA ── */
+/* the call to action box near the bottom, like go to rsvp */
 .cta-section {
   text-align: center;
   margin-bottom: 80px;
@@ -561,7 +560,7 @@ summary::-webkit-details-marker { display: none; }
   width: fit-content;
 }
 
-/* ── LINKS ── */
+/* underlined text links */
 .text-link,
 .back-link {
   display: inline-flex;
@@ -574,7 +573,7 @@ summary::-webkit-details-marker { display: none; }
   text-underline-offset: 3px;
 }
 
-/* ── RSVP ── */
+/* styles for the rsvp page */
 .rsvp-body {
   min-height: 100vh;
   display: grid;
@@ -637,7 +636,7 @@ select option { background: #EFE9E3; color: #2C1A0E; }
 .full-width   { width: 100%; border: 0; cursor: pointer; }
 .hidden-field { display: none; }
 
-/* ── REVEAL ANIMATIONS ── */
+/* the fade in animation when you scroll down the page */
 .reveal {
   opacity: 0;
   transform: translateY(24px);
@@ -654,7 +653,7 @@ select option { background: #EFE9E3; color: #2C1A0E; }
 .delay-2 { transition-delay: 0.16s; }
 .delay-3 { transition-delay: 0.24s; }
 
-/* ── RESPONSIVE 980px ── */
+/* changes for medium screens, like tablets */
 @media (max-width: 980px) {
   .hero,
   .venue-layout,
@@ -707,8 +706,7 @@ select option { background: #EFE9E3; color: #2C1A0E; }
   .menu-toggle { display: flex; }
 }
 
-/* ── RESPONSIVE 640px ── */
-/* ── RESPONSIVE 640px ── */
+/* changes for small screens, like phones */
 @media (max-width: 640px) {
   .site-shell, .rsvp-page { width: min(100% - 20px, 1000px); }
   .topbar {
@@ -779,7 +777,7 @@ select option { background: #EFE9E3; color: #2C1A0E; }
   .cta-section { padding: 22px; }
 }
 
-/* ── OUR STORY TIMELINE ── */
+/* the our story timeline section */
 .story {
   padding-block: clamp(4rem, 8vw, 8rem);
   position: relative;
@@ -982,7 +980,7 @@ select option { background: #EFE9E3; color: #2C1A0E; }
   .wedding-date-card small { margin-top: 0.4rem; font-size: 0.6rem; }
 }
 
-/* ── LANDING SCREEN ── */
+/* the big landing photo screen you see when you first open the site */
 .landing-screen {
   position: fixed;
   inset: 0;
@@ -1062,7 +1060,7 @@ select option { background: #EFE9E3; color: #2C1A0E; }
 
 body.landing-active { overflow: hidden; }
 
-/* ── HERO PHOTO ── */
+/* the main hero photo */
 .hero-photo {
   width: 100%;
   height: 100%;
@@ -1070,7 +1068,7 @@ body.landing-active { overflow: hidden; }
   border-radius: 12px;
 }
 
-/* ── DRESS CODE PAGE ── */
+/* styles just for the dress code page */
 .dresscode-page { padding: 40px 0 80px; }
 
 .dresscode-heading {
@@ -1115,7 +1113,7 @@ body.landing-active { overflow: hidden; }
   background: var(--line);
 }
 
-/* Palette wrapper */
+/* box that holds the color palette circles */
 .palette-wrapper { margin: 0 auto 56px; max-width: 680px; }
 
 .wedding-palette {
@@ -1156,7 +1154,7 @@ body.landing-active { overflow: hidden; }
   color: var(--muted);
 }
 
-/* Inspiration sections */
+/* the formal and semi formal outfit picture sections */
 .inspiration-section { margin-bottom: 60px; }
 .inspiration-title   { margin-bottom: 0; }
 
@@ -1168,7 +1166,7 @@ body.landing-active { overflow: hidden; }
   box-shadow: var(--shadow);
 }
 
-/* Dress code link in card */
+/* the link inside the dress code card */
 .dresscode-link {
   display: inline-block;
   margin-top: 12px;
@@ -1180,19 +1178,18 @@ body.landing-active { overflow: hidden; }
 }
 
 
-/* ═══════════════════════════════════════════
-   FOOTER
-   Append this block to the bottom of style.css
-   ═══════════════════════════════════════════ */
+/* ============================================================
+   FOOTER STUFF
+   this part goes at the very bottom of style.css
+   ============================================================ */
 
 .site-footer {
   background: var(--bg-soft);
   border-top: 1px solid var(--line);
   margin-top: 0;
-  /* Full-bleed: break out of .site-shell's max-width. .footer-inner
-     below still caps its own content at 1180px and centers it, so the
-     content position doesn't change — only the background now spans
-     edge to edge. */
+  /* this makes the footer stretch across the whole screen. footer-inner
+     below still keeps its content at 1180px wide and centered, so nothing
+     inside actually moves, its just the background that goes edge to edge. */
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
@@ -1208,7 +1205,7 @@ body.landing-active { overflow: hidden; }
   gap: 36px;
 }
 
-/* ── Brand block ── */
+/* the h and n logo thing in the footer */
 .footer-brand {
   text-align: center;
 }
@@ -1244,7 +1241,7 @@ body.landing-active { overflow: hidden; }
   margin: 0;
 }
 
-/* ── Ornamental rule ── */
+/* the decorative line with the little diamond shape in the middle */
 .footer-rule {
   display: flex;
   align-items: center;
@@ -1264,7 +1261,7 @@ body.landing-active { overflow: hidden; }
   opacity: 0.7;
 }
 
-/* ── Footer nav ── */
+/* the links down in the footer */
 .footer-nav {
   display: flex;
   flex-wrap: wrap;
@@ -1291,7 +1288,7 @@ body.landing-active { overflow: hidden; }
   text-underline-offset: 3px;
 }
 
-/* ── Info pills ── */
+/* little info bubbles for the footer, not being used right now but keeping them here just in case */
 .footer-pills {
   list-style: none;
   margin: 0;
@@ -1333,7 +1330,7 @@ a.pill-value:hover {
   text-underline-offset: 2px;
 }
 
-/* ── Bottom bar ── */
+/* the very last line at the bottom of the footer */
 .footer-bottom {
   border-top: 1px solid var(--line);
   width: 100%;
@@ -1348,7 +1345,7 @@ a.pill-value:hover {
   margin: 0;
 }
 
-/* ── Responsive ── */
+/* footer changes for small screens */
 @media (max-width: 640px) {
   .footer-inner {
     padding: 48px 20px 28px;
@@ -1367,8 +1364,7 @@ a.pill-value:hover {
   }
 }
 
-/* ── Scroll down ── */
-/* ── Scroll hint ── */
+/* the "scroll for details" hint at the bottom of the landing screen */
 .scroll-hint {
   position: fixed;
   bottom: 36px;
@@ -1421,7 +1417,7 @@ a.pill-value:hover {
   scroll-margin-top: 120px;
 }
 
-/* ── IMAGE LIGHTBOX (click to zoom) ── */
+/* click a photo to zoom in on it, click again (or hit esc) to close it back up */
 .zoomable {
   cursor: zoom-in;
 }
@@ -1492,7 +1488,7 @@ body.lightbox-open {
   }
 }
 
-/* ── CONTACT PAGE ── */
+/* styles just for the contact us page */
 .contact-page { padding: 40px 0 80px; }
 
 .contact-intro {
@@ -1501,6 +1497,8 @@ body.lightbox-open {
   margin: 0 auto 8px;
 }
 
+/* fixes the heading so it actually centers right, instead of just
+   sticking to the left side of its box */
 .contact-intro h1 { max-width: none; }
 
 .contact-intro p { margin-top: 16px; font-size: 1.05rem; }
@@ -1530,6 +1528,7 @@ body.lightbox-open {
   margin: 48px 0 28px;
 }
 
+/* the two cards side by side for the bride and groom contact info */
 .contact-people {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1540,6 +1539,7 @@ body.lightbox-open {
 
 .person-card { text-align: center; }
 
+/* the round photo spot, its just a placeholder until real photos get added */
 .person-photo {
   width: 116px;
   height: 116px;
@@ -1588,6 +1588,7 @@ body.lightbox-open {
 
 .person-detail a:hover { text-decoration: underline; text-underline-offset: 2px; }
 
+/* the little facebook and instagram buttons under each person's info */
 .person-socials {
   display: flex;
   justify-content: center;
@@ -1619,6 +1620,7 @@ body.lightbox-open {
   fill: currentColor;
 }
 
+/* the quick links card down at the bottom of the contact page */
 .quick-links-card { max-width: 760px; margin: 0 auto; text-align: center; }
 
 .quick-links-list {
@@ -1640,6 +1642,7 @@ body.lightbox-open {
 
 .quick-links-list a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
+/* stack the bride and groom cards on top of each other on small screens */
 @media (max-width: 640px) {
   .contact-people { grid-template-columns: 1fr; }
 }
