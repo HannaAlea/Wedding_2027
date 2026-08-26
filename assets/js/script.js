@@ -255,3 +255,98 @@ if (zoomableImages.length) {
     }
   });
 }
+
+// Floating heart trail — mouse trail on desktop, tap bursts on mobile.
+// Respects prefers-reduced-motion; cleans up via animationend so nothing
+// piles up in the DOM.
+(function () {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) return;
+
+  const HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
+  const MAX_HEARTS = 8;
+
+  let activeHearts = 0;
+
+  function spawnHeart(x, y) {
+    if (activeHearts >= MAX_HEARTS) return;
+    activeHearts++;
+
+    const heart = document.createElement('div');
+    heart.className = 'cursor-heart';
+    heart.style.left = x + 'px';
+    heart.style.top = y + 'px';
+    heart.style.setProperty('--heart-rot', (Math.random() * 24 - 12) + 'deg');
+    heart.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + HEART_PATH + '"/></svg>';
+
+    heart.addEventListener('animationend', () => {
+      heart.remove();
+      activeHearts--;
+    }, { once: true });
+
+    document.body.appendChild(heart);
+  }
+
+  // --- Desktop: mouse trail ---
+  const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+
+  if (hasFinePointer) {
+    const SPAWN_INTERVAL = 260; // ms between hearts while the pointer moves
+    let lastSpawn = 0;
+
+    window.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const now = Date.now();
+      if (now - lastSpawn < SPAWN_INTERVAL) return;
+      lastSpawn = now;
+      spawnHeart(e.clientX, e.clientY);
+    }, { passive: true });
+  }
+
+  // --- Mobile/touch: tap bursts ---
+  // Ignores taps on interactive elements (links, buttons, form fields,
+  // zoomable photos) and ignores drags/scrolls, only firing on a genuine tap.
+  const TAP_MOVE_THRESHOLD = 12; // px of allowed finger movement to still count as a tap
+  const TAP_TIME_THRESHOLD = 350; // ms - longer holds/drags are ignored
+  const SKIP_SELECTOR = 'a, button, input, textarea, select, .zoomable, .menu-toggle, summary';
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchStartTime = 0;
+  let touchStartValid = false;
+
+  window.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) { touchStartValid = false; return; }
+    if (e.target.closest(SKIP_SELECTOR)) { touchStartValid = false; return; }
+
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchStartTime = Date.now();
+    touchStartValid = true;
+  }, { passive: true });
+
+  window.addEventListener('touchend', (e) => {
+    if (!touchStartValid) return;
+    touchStartValid = false;
+
+    const touch = e.changedTouches[0];
+    if (!touch) return;
+
+    const dx = touch.clientX - touchStartX;
+    const dy = touch.clientY - touchStartY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const duration = Date.now() - touchStartTime;
+
+    if (distance > TAP_MOVE_THRESHOLD || duration > TAP_TIME_THRESHOLD) return; // it was a scroll/drag, not a tap
+
+    // small burst of hearts around the tap point
+    const burstCount = 3;
+    for (let i = 0; i < burstCount; i++) {
+      const offsetX = (Math.random() - 0.5) * 30;
+      const offsetY = (Math.random() - 0.5) * 20;
+      setTimeout(() => {
+        spawnHeart(touch.clientX + offsetX, touch.clientY + offsetY);
+      }, i * 60);
+    }
+  }, { passive: true });
+})();
