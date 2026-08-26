@@ -255,3 +255,46 @@ if (zoomableImages.length) {
     }
   });
 }
+
+// Floating heart cursor trail — desktop pointers only, throttled, capped,
+// and cleaned up via animationend so nothing piles up in the DOM.
+(function () {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+
+  if (prefersReducedMotion || !hasFinePointer) return; // skip on touch devices and reduced-motion
+
+  const HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
+  const MAX_HEARTS = 8;
+  const SPAWN_INTERVAL = 260; // ms between hearts while the pointer moves
+
+  let lastSpawn = 0;
+  let activeHearts = 0;
+
+  function spawnHeart(x, y) {
+    if (activeHearts >= MAX_HEARTS) return;
+    activeHearts++;
+
+    const heart = document.createElement('div');
+    heart.className = 'cursor-heart';
+    heart.style.left = x + 'px';
+    heart.style.top = y + 'px';
+    heart.style.setProperty('--heart-rot', (Math.random() * 24 - 12) + 'deg');
+    heart.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + HEART_PATH + '"/></svg>';
+
+    heart.addEventListener('animationend', () => {
+      heart.remove();
+      activeHearts--;
+    }, { once: true });
+
+    document.body.appendChild(heart);
+  }
+
+  window.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return; // mice/trackpads only
+    const now = Date.now();
+    if (now - lastSpawn < SPAWN_INTERVAL) return;
+    lastSpawn = now;
+    spawnHeart(e.clientX, e.clientY);
+  }, { passive: true });
+})();
