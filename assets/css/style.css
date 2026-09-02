@@ -887,6 +887,72 @@ select option { background: #EFE9E3; color: #2C1A0E; }
   display: block;
 }
 
+/* Photo stack: a story-photo with more than one image shows the extra
+   photos fanned out behind the front one, like a little pile of prints.
+   Clicking it opens all of them together in the lightbox gallery. */
+.photo-stack {
+  position: relative;
+  isolation: isolate;
+}
+
+.photo-stack .stack-photo {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+  object-position: center 45%;
+  border-radius: 24px;
+  border: 6px solid rgba(239, 233, 227, 0.9);
+  box-shadow: 0 16px 34px rgba(44, 26, 14, 0.22);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.photo-stack .stack-photo:nth-child(1) { z-index: 3; transform: rotate(0deg); }
+.photo-stack .stack-photo:nth-child(2) { z-index: 2; transform: rotate(-7deg) translate(-4%, 3%); }
+.photo-stack .stack-photo:nth-child(3) { z-index: 1; transform: rotate(7deg) translate(5%, 4%); }
+.photo-stack .stack-photo:nth-child(n+4) { display: none; } /* fan shows up to 3; the rest still live in the gallery */
+
+.photo-stack .stack-photo:not(:first-child) {
+  pointer-events: none; /* only the front photo is clickable, it opens the whole gallery */
+}
+
+.photo-stack:hover .stack-photo:nth-child(1),
+.photo-stack:focus-within .stack-photo:nth-child(1) {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 44px rgba(44, 26, 14, 0.30);
+}
+
+.stack-count {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(44, 26, 14, 0.78);
+  color: #F9F8F6;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+@media (max-width: 860px) {
+  .photo-stack .stack-photo {
+    border-radius: 14px;
+    border-width: 3px;
+  }
+  .photo-stack .stack-photo:nth-child(2) { transform: rotate(-6deg) translate(3px, 2px); }
+  .photo-stack .stack-photo:nth-child(3) { transform: rotate(6deg) translate(-3px, 3px); }
+  .stack-count { top: 4px; right: 4px; font-size: 0.55rem; padding: 2px 5px; gap: 0; }
+  .stack-count-label { display: none; }
+}
+
 .placeholder-photo {
   display: grid;
   place-items: center;
@@ -1448,9 +1514,19 @@ body.lightbox-open {
   visibility: visible;
 }
 
+.lightbox-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  max-height: 100%;
+  cursor: default;
+}
+
 .lightbox-overlay img {
   max-width: min(92vw, 900px);
-  max-height: 88vh;
+  max-height: 80vh;
   width: auto;
   height: auto;
   border-radius: 18px;
@@ -1479,6 +1555,61 @@ body.lightbox-open {
   cursor: pointer;
   display: grid;
   place-items: center;
+}
+
+/* Prev/next arrows for a multi-photo gallery inside the lightbox */
+.lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(10, 5, 2, 0.45);
+  color: #F9F8F6;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.lightbox-arrow:hover,
+.lightbox-arrow:focus-visible {
+  background: rgba(10, 5, 2, 0.72);
+}
+
+.lightbox-prev { left: -8px; }
+.lightbox-next { right: -8px; }
+
+.lightbox-arrow[hidden] { display: none; }
+
+.lightbox-counter {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  color: rgba(249, 248, 246, 0.85);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  background: rgba(10, 5, 2, 0.45);
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.lightbox-counter[hidden] { display: none; }
+
+@media (max-width: 640px) {
+  .lightbox-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  .lightbox-prev { left: 4px; }
+  .lightbox-next { right: 4px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
