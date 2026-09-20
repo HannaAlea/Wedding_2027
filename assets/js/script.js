@@ -571,11 +571,12 @@ if (zoomableImages.length) {
 
   const HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
   const MAX_HEARTS = 8;
+  const MAX_HEARTS_DRAWING = 24; // a finger-drawn trail needs more hearts alive at once
 
   let activeHearts = 0;
 
-  function spawnHeart(x, y) {
-    if (activeHearts >= MAX_HEARTS) return;
+  function spawnHeart(x, y, cap = MAX_HEARTS) {
+    if (activeHearts >= cap) return;
     activeHearts++;
 
     const heart = document.createElement('div');
@@ -609,11 +610,18 @@ if (zoomableImages.length) {
     }, { passive: true });
   }
 
-  // --- Mobile/touch: tap bursts ---
-  // Ignores taps on interactive elements (links, buttons, form fields,
-  // zoomable photos) and ignores drags/scrolls, only firing on a genuine tap.
-  const TAP_MOVE_THRESHOLD = 12; // px of allowed finger movement to still count as a tap
-  const TAP_TIME_THRESHOLD = 350; // ms - longer holds/drags are ignored
+  // --- Mobile/touch: tap bursts, plus hold-and-drag to draw a heart trail ---
+  // A quick tap makes a small burst of hearts. Pressing and holding for a
+  // moment switches on "draw mode": while the finger stays down and drags,
+  // hearts follow it and the page does not scroll. If the finger moves right
+  // away instead (before the hold finishes), it is just a normal scroll.
+  // Interactive elements (links, buttons, form fields, zoomable photos) and
+  // the landing screen are ignored, and so is the photo viewer, where
+  // dragging is used for swiping between photos.
+  const TAP_MOVE_THRESHOLD = 12;  // px of allowed finger movement to still count as a tap
+  const TAP_TIME_THRESHOLD = 350; // ms - longer holds/drags are not a tap
+  const HOLD_MS = 260;            // how long to hold still before draw mode switches on
+  const TRAIL_SPACING = 20;       // px the finger must travel between hearts while drawing
   const SKIP_SELECTOR = 'a, button, input, textarea, select, .zoomable, .menu-toggle, summary';
 
   let touchStartX = 0;
@@ -621,7 +629,22 @@ if (zoomableImages.length) {
   let touchStartTime = 0;
   let touchStartValid = false;
 
+  let holdTimer = null;
+  let drawing = false;
+  let lastTrailX = 0;
+  let lastTrailY = 0;
+
+  function endDrawing() {
+    clearTimeout(holdTimer);
+    holdTimer = null;
+    if (drawing) {
+      drawing = false;
+      document.body.classList.remove('heart-drawing');
+    }
+  }
+
   window.addEventListener('touchstart', (e) => {
+    endDrawing();
     if (e.touches.length !== 1) { touchStartValid = false; return; }
     if (e.target.closest(SKIP_SELECTOR)) { touchStartValid = false; return; }
 
@@ -629,9 +652,58 @@ if (zoomableImages.length) {
     touchStartY = e.touches[0].clientY;
     touchStartTime = Date.now();
     touchStartValid = true;
+
+    const canDraw =
+        !document.body.classList.contains('landing-active') &&
+        !document.body.classList.contains('lightbox-open') &&
+        !e.target.closest('.lightbox-overlay');
+
+    if (canDraw) {
+      holdTimer = setTimeout(() => {
+        holdTimer = null;
+        drawing = true;
+        lastTrailX = touchStartX;
+        lastTrailY = touchStartY;
+        document.body.classList.add('heart-drawing'); // stops text selection while drawing
+        if (navigator.vibrate) navigator.vibrate(10); // tiny buzz so you can feel it switch on
+        spawnHeart(touchStartX, touchStartY, MAX_HEARTS_DRAWING);
+      }, HOLD_MS);
+    }
   }, { passive: true });
 
+  // Not passive on purpose: in draw mode this has to be able to stop the
+  // page from scrolling. Outside draw mode it does nothing except cancel the
+  // pending hold if the finger starts moving (i.e. the person is scrolling).
+  window.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    if (!touch) return;
+
+    if (drawing) {
+      if (e.cancelable) e.preventDefault(); // keep the page still while drawing
+      const dx = touch.clientX - lastTrailX;
+      const dy = touch.clientY - lastTrailY;
+      if (Math.hypot(dx, dy) >= TRAIL_SPACING) {
+        lastTrailX = touch.clientX;
+        lastTrailY = touch.clientY;
+        spawnHeart(touch.clientX, touch.clientY, MAX_HEARTS_DRAWING);
+      }
+      return;
+    }
+
+    if (holdTimer) {
+      const moved = Math.hypot(touch.clientX - touchStartX, touch.clientY - touchStartY);
+      if (moved > TAP_MOVE_THRESHOLD) {
+        clearTimeout(holdTimer); // moved before the hold finished, so it's a scroll
+        holdTimer = null;
+      }
+    }
+  }, { passive: false });
+
   window.addEventListener('touchend', (e) => {
+    const wasDrawing = drawing;
+    endDrawing();
+    if (wasDrawing) { touchStartValid = false; return; } // finished drawing, not a tap
+
     if (!touchStartValid) return;
     touchStartValid = false;
 
@@ -654,5 +726,10 @@ if (zoomableImages.length) {
         spawnHeart(touch.clientX + offsetX, touch.clientY + offsetY);
       }, i * 60);
     }
+  }, { passive: true });
+
+  window.addEventListener('touchcancel', () => {
+    endDrawing();
+    touchStartValid = false;
   }, { passive: true });
 })();

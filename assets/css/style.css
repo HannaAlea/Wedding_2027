@@ -1865,6 +1865,14 @@ a.pill-value:hover {
   filter: drop-shadow(0 2px 3px rgba(44, 26, 14, 0.18));
 }
 
+/* while a finger is drawing hearts, don't let the long-press select text or
+   pop up the iOS image/link menu */
+body.heart-drawing {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
 @keyframes cursorHeartFloat {
   0% {
     transform: translate(-50%, -50%) translateY(0) scale(0.5) rotate(var(--heart-rot, 0deg));
