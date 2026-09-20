@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="RSVP for Hanna & Nathaniel's wedding on 30 July 2027 in Ålesund, Norway.">
+  <meta name="description" content="You're invited to Hanna & Nathaniel's wedding on 30 July 2027 in Ålesund, Norway.">
   <title>RSVP | Hanna & Nathaniel</title>
   <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon16x16.png">
@@ -15,65 +15,27 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="rsvp-body">
-<main class="rsvp-page">
-  <a class="back-link" href="index.html"> < Back to home</a>
+<body class="gateway-body">
+<main class="gateway-stage">
 
-  <section class="rsvp-panel">
-    <div class="rsvp-intro">
-      <p class="eyebrow">Hanna & Nathaniel</p>
-      <h1>RSVP</h1>
-      <p>Please let us know if you will be celebrating with us.</p>
+  <div class="gateway-photo g1"><img src="assets/images/engagement-hero.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="gateway-photo g2"><img src="assets/images/FirstPicture.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="gateway-photo g3"><img src="assets/images/FirstDate.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="gateway-photo g4"><img src="assets/images/AmusementPark.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="gateway-photo g5"><img src="assets/images/NorthernLights.png" alt="" loading="lazy" decoding="async"></div>
+  <div class="gateway-photo g7"><img src="assets/images/engagement.png" alt="" loading="lazy" decoding="async"></div>
+
+  <div class="gateway-content">
+    <p class="eyebrow reveal">You're invited to celebrate</p>
+    <h1 class="reveal delay-1">Hanna <span class="amp">&amp;</span> Nathaniel</h1>
+    <p class="gateway-subtext reveal delay-2">July 30, 2027 Ålesund, Norway. Take a look around, or jump straight to letting us know you'll be there.</p>
+    <div class="hero-actions gateway-actions reveal delay-3">
+      <a href="index.html" class="button secondary">Visit the site</a>
+      <a href="rsvp-form.html" class="button primary">Go to RSVP form</a>
     </div>
+  </div>
 
-    <form class="rsvp-form" name="rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-      <input type="hidden" name="form-name" value="rsvp">
-      <input type="hidden" name="subject" value="New wedding RSVP submission">
-
-      <p class="hidden-field">
-        <label>Don’t fill this out: <input name="bot-field"></label>
-      </p>
-
-      <div class="field-grid">
-        <label>
-          <span>Full name</span>
-          <input type="text" name="name" placeholder="Your full name" required>
-        </label>
-
-        <label>
-          <span>Email</span>
-          <input type="email" name="email" placeholder="you@example.com" required>
-        </label>
-      </div>
-
-      <div class="field-grid">
-        <label>
-          <span>Will you attend?</span>
-          <select name="attendance" required>
-            <option value="">Choose one</option>
-            <option value="Yes, happily attending">Yes, happily attending</option>
-            <option value="Sorry, cannot attend">Sorry, cannot attend</option>
-          </select>
-        </label>
-
-
-      </div>
-
-      <label>
-        <span>Dietary notes</span>
-        <input type="text" name="dietary" placeholder="Allergies or dietary restrictions">
-      </label>
-
-      <label>
-        <span>Message for the couple</span>
-        <textarea name="message" rows="5" placeholder="Write a short message"></textarea>
-      </label>
-
-      <button class="button primary full-width" type="submit">Submit RSVP</button>
-    </form>
-  </section>
 </main>
-
 <script src="assets/js/script.js"></script>
 </body>
 </html>

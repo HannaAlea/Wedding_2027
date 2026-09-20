@@ -920,7 +920,7 @@ select option { background: #EFE9E3; color: #2C1A0E; }
 }
 
 .photo-stack:hover .stack-photo:nth-child(1),
-.photo-stack:has(:focus-visible) .stack-photo:nth-child(1) {
+.photo-stack:focus-within .stack-photo:nth-child(1) {
   transform: translateY(-6px);
   box-shadow: 0 22px 44px rgba(44, 26, 14, 0.30);
 }
@@ -1488,26 +1488,10 @@ a.pill-value:hover {
   cursor: zoom-in;
 }
 
-/* the thumbnail hides while its big copy is "flown out" of it */
-.zoomable.lightbox-source-hidden {
-  opacity: 0;
+body.lightbox-open {
+  overflow: hidden;
 }
 
-/* While the photo is flown out, and right after it lands, keep the thumbnail
-   perfectly still: no hover lift, no shadow change, no transitions. */
-.photo-stack .stack-photo.lightbox-source-hidden,
-.photo-stack .stack-photo.lightbox-quiet {
-  transform: none !important;
-  transition: none !important;
-  box-shadow: 0 16px 34px rgba(44, 26, 14, 0.22) !important;
-}
-
-/* Scrolling is blocked in JS instead of body{overflow:hidden}, so the page
-   never shifts sideways when the scrollbar would disappear. */
-
-/* The overlay itself never fades (that made the photo fade in instead of
-   flying out). Only the dark backdrop, on ::before, fades. It is a plain
-   dark tint, no backdrop-filter blur, which was the main cause of the lag. */
 .lightbox-overlay {
   position: fixed;
   inset: 0;
@@ -1516,31 +1500,18 @@ a.pill-value:hover {
   align-items: center;
   justify-content: center;
   padding: 24px;
+  background: rgba(10, 5, 2, 0.86);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   cursor: zoom-out;
-  visibility: hidden;
-  pointer-events: none;
-  overscroll-behavior: contain;
-  /* stay visible just long enough for the photo to fly back to its spot */
-  transition: visibility 0s linear 0.45s;
-}
-
-.lightbox-overlay::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(10, 5, 2, 0.92);
   opacity: 0;
-  transition: opacity 0.35s ease;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
 }
 
 .lightbox-overlay.active {
-  visibility: visible;
-  pointer-events: auto;
-  transition-delay: 0s;
-}
-
-.lightbox-overlay.active::before {
   opacity: 1;
+  visibility: visible;
 }
 
 .lightbox-stage {
@@ -1561,7 +1532,12 @@ a.pill-value:hover {
   border-radius: 18px;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
   cursor: zoom-out;
-  will-change: transform;
+  transform: scale(0.9);
+  transition: transform 0.35s ease;
+}
+
+.lightbox-overlay.active img {
+  transform: scale(1);
 }
 
 .lightbox-close {
@@ -1626,37 +1602,6 @@ a.pill-value:hover {
 
 .lightbox-counter[hidden] { display: none; }
 
-/* buttons and counter fade in just after the photo lands */
-.lightbox-close,
-.lightbox-counter,
-.lightbox-arrow {
-  opacity: 0;
-}
-
-.lightbox-overlay.active .lightbox-close,
-.lightbox-overlay.active .lightbox-counter,
-.lightbox-overlay.active .lightbox-arrow {
-  opacity: 1;
-}
-
-.lightbox-close,
-.lightbox-counter {
-  transition: opacity 0.25s ease;
-}
-
-.lightbox-arrow {
-  transition: background 0.2s ease, transform 0.2s ease, opacity 0.25s ease;
-}
-
-.lightbox-overlay.active .lightbox-close,
-.lightbox-overlay.active .lightbox-counter {
-  transition-delay: 0.2s;
-}
-
-.lightbox-overlay.active .lightbox-arrow {
-  transition-delay: 0s, 0s, 0.2s;
-}
-
 @media (max-width: 640px) {
   .lightbox-arrow {
     width: 40px;
@@ -1669,10 +1614,7 @@ a.pill-value:hover {
 
 @media (prefers-reduced-motion: reduce) {
   .lightbox-overlay,
-  .lightbox-overlay::before,
-  .lightbox-close,
-  .lightbox-counter,
-  .lightbox-arrow {
+  .lightbox-overlay img {
     transition: none;
   }
 }
@@ -1865,14 +1807,6 @@ a.pill-value:hover {
   filter: drop-shadow(0 2px 3px rgba(44, 26, 14, 0.18));
 }
 
-/* while a finger is drawing hearts, don't let the long-press select text or
-   pop up the iOS image/link menu */
-body.heart-drawing {
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
-}
-
 @keyframes cursorHeartFloat {
   0% {
     transform: translate(-50%, -50%) translateY(0) scale(0.5) rotate(var(--heart-rot, 0deg));
@@ -1890,4 +1824,110 @@ body.heart-drawing {
 
 @media (prefers-reduced-motion: reduce) {
   .cursor-heart { display: none; }
+}
+
+/* ============================================================
+   RSVP GATEWAY PAGE
+   this is the page people land on first when they scan the QR code
+   or type in /rsvp directly. all it does is give them two choices:
+   look around the site, or jump straight to the actual RSVP form.
+   it reuses .eyebrow, h1, .hero-actions and .button/.primary/.secondary
+   from earlier in this file, so this section is really just the
+   scattered-photo layout around them.
+   ============================================================ */
+
+.gateway-body {
+  min-height: 100vh;
+  display: grid;
+  align-items: center;
+  background: var(--bg);
+  overflow-x: hidden;
+}
+
+.gateway-stage {
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px 24px;
+  min-height: 100vh;
+  display: grid;
+  align-items: center;
+}
+
+/* the little polaroid-style photo frames scattered around the edges */
+.gateway-photo {
+  position: absolute;
+  background: #fff;
+  padding: 8px 8px 20px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+}
+
+.gateway-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* desktop scatter positions, roughly framing the edges and leaving
+   the middle clear for the text and buttons. percentages so it holds
+   together reasonably as the window is resized */
+.g1 { top: 4%;    left: 4%;   width: 15%; aspect-ratio: 4/5; transform: rotate(-7deg); }
+.g2 { top: 1%;    left: 41%;  width: 10%; aspect-ratio: 4/5; transform: rotate(3deg); }
+.g3 { bottom: 5%; left: 7%;   width: 15%; aspect-ratio: 5/4; transform: rotate(5deg); }
+.g4 { top: 6%;    right: 5%;  width: 13%; aspect-ratio: 4/5; transform: rotate(6deg); }
+.g5 { bottom: 6%; right: 6%;  width: 14%; aspect-ratio: 4/5; transform: rotate(-8deg); }
+.g7 { bottom: 4%; left: 42%;  width: 10%; aspect-ratio: 4/5; transform: rotate(-4deg); }
+
+.gateway-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 12%;
+}
+
+.gateway-content h1 {
+  max-width: none;
+  font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+}
+
+.gateway-content h1 .amp {
+  color: var(--accent-deep);
+  font-style: italic;
+}
+
+.gateway-subtext {
+  margin: 20px 0 8px;
+  max-width: 42ch;
+}
+
+.gateway-actions { margin-top: 26px; }
+
+/* tablets: fewer photos and a bit bigger so they still read clearly */
+@media (max-width: 980px) {
+  .gateway-stage { padding: 40px 20px; }
+  .gateway-photo { width: 20%; }
+}
+
+/* phones: pull the six photos in tight to the very top and bottom
+   edges (three-ish per side) so the text and buttons stay front and
+   center and nothing sits under a thumb */
+@media (max-width: 640px) {
+  .gateway-photo { width: 25% !important; padding: 5px 5px 14px; }
+  .g1 { top: 3%;    left: 4%;  transform: rotate(-8deg); }
+  .g2 { top: 1.5%;  left: 50%; transform: translateX(-50%) rotate(2deg); }
+  .g4 { top: 3%;    right: 4%; transform: rotate(7deg); }
+  .g3 { bottom: 3%; left: 4%;  transform: rotate(6deg); }
+  .g7 { bottom: 1.5%; left: 50%; right: auto; transform: translateX(-50%) rotate(-4deg); }
+  .g5 { bottom: 3%; right: 4%; transform: rotate(-6deg); }
+  .gateway-content { padding: 0 8%; }
+  .gateway-content h1 { font-size: 2.5rem; }
+  .gateway-subtext { font-size: 0.92rem; }
 }
