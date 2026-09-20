@@ -184,9 +184,19 @@ if (scrollHint && landingScreen) {
 // centered version of it. Images that share a "data-gallery" value (used by
 // the story-timeline photo stacks) open together as a swipeable gallery with
 // prev/next arrows; images without one just open on their own, same as before.
+//
+// The photo "flies" out of its spot on the page into the center (and back on
+// close) using a FLIP-style transform animation, so it stays smooth even on
+// phones: only transform/opacity are animated on the GPU, and the big blurred
+// backdrop that used to cause the lag is gone.
 const zoomableImages = document.querySelectorAll('.zoomable');
 
 if (zoomableImages.length) {
+  const OPEN_MS = 480;
+  const CLOSE_MS = 360;
+  const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
   // Group images into galleries. Anything without data-gallery becomes a
   // gallery of one, keyed by its own position, so existing single photos
   // (e.g. on the dress code page) behave exactly as before.
@@ -241,10 +251,24 @@ if (zoomableImages.length) {
   let lastFocused = null; // the thumbnail that was opened, to refocus on close
   let currentGallery = [];
   let currentIndex = 0;
+  let flyAnim = null;      // the running open/close animation, if any
+
+  // Keep decoded copies of the gallery photos so flipping between them (and
+  // the very first open) never waits on a network fetch or image decode.
+  const preloaded = new Map();
+  function preload(src) {
+    if (!src || preloaded.has(src)) return;
+    const p = new Image();
+    p.decoding = 'async';
+    p.src = src;
+    if (p.decode) p.decode().catch(() => {});
+    preloaded.set(src, p);
+  }
+  const srcOf = (img) => img.currentSrc || img.src;
 
   function renderCurrent() {
     const img = currentGallery[currentIndex];
-    overlayImg.src = img.currentSrc || img.src;
+    overlayImg.src = srcOf(img);
     overlayImg.alt = img.alt || '';
 
     const multiple = currentGallery.length > 1;
@@ -256,14 +280,116 @@ if (zoomableImages.length) {
     }
   }
 
-  function showPrev() {
-    currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
+  // Move to the previous (-1) or next (+1) photo. The new photo slides in
+  // from the side you're heading towards, so it feels like turning a page.
+  let navToken = 0; // lets a fast second tap/swipe cancel the first one's animation
+  function go(dir) {
+    if (currentGallery.length < 2) return;
+    stopFlight();
+
+    const token = ++navToken;
+    currentIndex = (currentIndex + dir + currentGallery.length) % currentGallery.length;
+
+    // hide the old photo, swap in the new one, and only reveal it once it is
+    // decoded, so there is never a flash of the wrong picture
+    overlayImg.style.opacity = '0';
     renderCurrent();
+
+    const reveal = () => {
+      if (token !== navToken) return;
+      overlayImg.style.opacity = '';
+      if (reduceMotion.matches || !overlayImg.animate) return;
+      flyAnim = overlayImg.animate(
+          [
+            { transform: `translate3d(${dir * 48}px, 0, 0)`, opacity: 0 },
+            { transform: 'translate3d(0, 0, 0)', opacity: 1 }
+          ],
+          { duration: 260, easing: EASE }
+      );
+      flyAnim.onfinish = () => { flyAnim = null; };
+    };
+
+    if (overlayImg.decode) overlayImg.decode().then(reveal, reveal);
+    else reveal();
   }
 
-  function showNext() {
-    currentIndex = (currentIndex + 1) % currentGallery.length;
-    renderCurrent();
+  const showPrev = () => go(-1);
+  const showNext = () => go(1);
+
+  // The visible photo area of a thumbnail on screen (inside its border), plus
+  // its corner radius and object-position, so the flight starts exactly where
+  // the picture visibly is.
+  function measureThumb(el) {
+    const r = el.getBoundingClientRect();
+    const cs = getComputedStyle(el);
+    const b = parseFloat(cs.borderTopWidth) || 0;
+    const pos = (cs.objectPosition || '50% 50%').split(' ');
+    const frac = (v) => (v && v.endsWith('%') ? parseFloat(v) / 100 : 0.5);
+    return {
+      left: r.left + b,
+      top: r.top + b,
+      width: Math.max(1, r.width - b * 2),
+      height: Math.max(1, r.height - b * 2),
+      radius: Math.max(0, (parseFloat(cs.borderTopLeftRadius) || 0) - b),
+      px: cs.objectFit === 'cover' ? frac(pos[0]) : 0.5,
+      py: cs.objectFit === 'cover' ? frac(pos[1]) : 0.5
+    };
+  }
+
+  // Keyframes that make the big centered image look like the small thumbnail:
+  // scaled + moved onto it, and cropped (clip-path) to the thumbnail's shape.
+  function thumbFrames(from, to) {
+    const s = Math.max(from.width / to.width, from.height / to.height);
+    const visW = from.width / s;
+    const visH = from.height / s;
+    const cropL = (to.width - visW) * from.px;
+    const cropT = (to.height - visH) * from.py;
+    const cropR = to.width - visW - cropL;
+    const cropB = to.height - visH - cropT;
+
+    // centre of the visible crop, relative to the image's own centre
+    const ox = cropL + visW / 2 - to.width / 2;
+    const oy = cropT + visH / 2 - to.height / 2;
+    const dx = (from.left + from.width / 2) - (to.left + to.width / 2) - s * ox;
+    const dy = (from.top + from.height / 2) - (to.top + to.height / 2) - s * oy;
+
+    return {
+      start: {
+        transform: `translate3d(${dx}px, ${dy}px, 0) scale(${s})`,
+        clipPath: `inset(${cropT}px ${cropR}px ${cropB}px ${cropL}px round ${from.radius / s}px)`
+      },
+      end: {
+        transform: 'translate3d(0, 0, 0) scale(1)',
+        clipPath: 'inset(0px 0px 0px 0px round 18px)'
+      }
+    };
+  }
+
+  function stopFlight() {
+    if (flyAnim) {
+      flyAnim.cancel();
+      flyAnim = null;
+    }
+  }
+
+  // After the photo lands back on its thumbnail, hold the thumbnail still (no
+  // hover lift / shadow change) until the mouse actually moves. Otherwise the
+  // hover effect kicks in right as it lands and the photo visibly "settles".
+  const lastPtr = { x: 0, y: 0 };
+  window.addEventListener('pointermove', (e) => {
+    lastPtr.x = e.clientX;
+    lastPtr.y = e.clientY;
+  }, { passive: true });
+
+  function quietThumb(thumb) {
+    thumb.classList.add('lightbox-quiet');
+    const p0 = { x: lastPtr.x, y: lastPtr.y };
+    const onMove = (e) => {
+      if (Math.hypot(e.clientX - p0.x, e.clientY - p0.y) < 8) return;
+      thumb.classList.remove('lightbox-quiet');
+      window.removeEventListener('pointermove', onMove);
+    };
+    window.addEventListener('pointermove', onMove, { passive: true });
   }
 
   function openLightbox(sourceImg) {
@@ -273,20 +399,80 @@ if (zoomableImages.length) {
     if (currentIndex < 0) currentIndex = 0;
     lastFocused = sourceImg;
 
+    stopFlight();
+    navToken++;
+    overlayImg.style.opacity = '';
+    sourceImg.classList.remove('lightbox-quiet');
+    currentGallery.forEach((img) => preload(srcOf(img)));
     renderCurrent();
+
     overlay.classList.add('active');
     overlay.setAttribute('aria-hidden', 'false');
     document.body.classList.add('lightbox-open');
-    closeBtn.focus(); // move keyboard focus into the dialog
+    closeBtn.focus({ preventScroll: true }); // move keyboard focus into the dialog
+
+    if (reduceMotion.matches || !overlayImg.animate) return;
+
+    // Measure after the body scroll-lock so the thumbnail position is final.
+    const from = measureThumb(sourceImg);
+
+    // Keep the big image invisible until the flight is ready to start, so it
+    // never flashes at full size first.
+    overlayImg.style.visibility = 'hidden';
+
+    const fly = () => {
+      const to = overlayImg.getBoundingClientRect();
+      if (!to.width || !to.height) {
+        overlayImg.style.visibility = '';
+        return;
+      }
+      const f = thumbFrames(from, to);
+      flyAnim = overlayImg.animate([f.start, f.end], { duration: OPEN_MS, easing: EASE });
+      overlayImg.style.visibility = '';
+      sourceImg.classList.add('lightbox-source-hidden'); // the photo "lifts off" the page
+      flyAnim.onfinish = () => { flyAnim = null; };
+    };
+
+    if (overlayImg.decode) overlayImg.decode().then(fly, fly);
+    else fly();
   }
 
   function closeLightbox() {
+    if (!overlay.classList.contains('active')) return;
+
     overlay.classList.remove('active');
     overlay.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('lightbox-open');
 
-    if (lastFocused) {
-      lastFocused.focus({ preventScroll: true }); // send focus back to the thumbnail
+    const thumb = lastFocused;
+    const restoreThumb = () => {
+      if (!thumb) return;
+      quietThumb(thumb);
+      thumb.classList.remove('lightbox-source-hidden');
+    };
+
+    if (thumb && !reduceMotion.matches && overlayImg.animate) {
+      stopFlight();
+      const to = overlayImg.getBoundingClientRect();
+      const from = measureThumb(thumb); // measured after the scroll-lock is released
+      if (to.width && to.height) {
+        const f = thumbFrames(from, to);
+        // fill: forwards keeps it parked on the thumbnail until the overlay hides
+        flyAnim = overlayImg.animate([f.end, f.start], {
+          duration: CLOSE_MS,
+          easing: EASE,
+          fill: 'forwards'
+        });
+        flyAnim.onfinish = restoreThumb;
+      } else {
+        restoreThumb();
+      }
+    } else {
+      restoreThumb();
+    }
+
+    if (thumb) {
+      thumb.focus({ preventScroll: true }); // send focus back to the thumbnail
     }
   }
 
@@ -294,6 +480,9 @@ if (zoomableImages.length) {
     img.setAttribute('tabindex', '0');
     img.setAttribute('role', 'button');
     img.setAttribute('aria-label', img.dataset.gallery ? 'Click to view photos' : 'Click to zoom image');
+
+    // Warm the cache as soon as someone points at a photo
+    img.addEventListener('pointerenter', () => preload(srcOf(img)), { once: true });
 
     img.addEventListener('click', () => openLightbox(img));
     img.addEventListener('keydown', (e) => {
@@ -313,6 +502,17 @@ if (zoomableImages.length) {
     showNext();
   });
 
+  // On touch screens, tapping the right half of the photo goes to the next
+  // one and tapping the left half goes back to the previous one. (Swiping
+  // left/right does the same, see the touch handlers below.)
+  const coarsePointer = window.matchMedia('(pointer: coarse)');
+  overlayImg.addEventListener('click', (e) => {
+    if (currentGallery.length < 2 || !coarsePointer.matches) return;
+    const r = overlayImg.getBoundingClientRect();
+    if (e.clientX >= r.left + r.width / 2) showNext();
+    else showPrev();
+  });
+
   // Clicking the dark backdrop closes it; clicking the image, arrows or
   // counter should not (so people can flip through photos without exiting).
   overlay.addEventListener('click', closeLightbox);
@@ -323,8 +523,19 @@ if (zoomableImages.length) {
     closeLightbox();
   });
 
+  // Block page scrolling behind the lightbox WITHOUT hiding the page's
+  // scrollbar. Hiding it made the page (and the photo) shift sideways by a
+  // few pixels on open/close, which showed up as a jump at the end of the
+  // close animation.
+  const blockScroll = (e) => e.preventDefault();
+  overlay.addEventListener('wheel', blockScroll, { passive: false });
+  overlay.addEventListener('touchmove', blockScroll, { passive: false });
+
   window.addEventListener('keydown', (e) => {
     if (!overlay.classList.contains('active')) return;
+    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.key)) {
+      e.preventDefault();
+    }
     if (e.key === 'Escape') closeLightbox();
     if (e.key === 'ArrowLeft') showPrev();
     if (e.key === 'ArrowRight') showNext();

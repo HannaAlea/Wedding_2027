@@ -920,7 +920,7 @@ select option { background: #EFE9E3; color: #2C1A0E; }
 }
 
 .photo-stack:hover .stack-photo:nth-child(1),
-.photo-stack:focus-within .stack-photo:nth-child(1) {
+.photo-stack:has(:focus-visible) .stack-photo:nth-child(1) {
   transform: translateY(-6px);
   box-shadow: 0 22px 44px rgba(44, 26, 14, 0.30);
 }
@@ -1488,10 +1488,26 @@ a.pill-value:hover {
   cursor: zoom-in;
 }
 
-body.lightbox-open {
-  overflow: hidden;
+/* the thumbnail hides while its big copy is "flown out" of it */
+.zoomable.lightbox-source-hidden {
+  opacity: 0;
 }
 
+/* While the photo is flown out, and right after it lands, keep the thumbnail
+   perfectly still: no hover lift, no shadow change, no transitions. */
+.photo-stack .stack-photo.lightbox-source-hidden,
+.photo-stack .stack-photo.lightbox-quiet {
+  transform: none !important;
+  transition: none !important;
+  box-shadow: 0 16px 34px rgba(44, 26, 14, 0.22) !important;
+}
+
+/* Scrolling is blocked in JS instead of body{overflow:hidden}, so the page
+   never shifts sideways when the scrollbar would disappear. */
+
+/* The overlay itself never fades (that made the photo fade in instead of
+   flying out). Only the dark backdrop, on ::before, fades. It is a plain
+   dark tint, no backdrop-filter blur, which was the main cause of the lag. */
 .lightbox-overlay {
   position: fixed;
   inset: 0;
@@ -1500,18 +1516,31 @@ body.lightbox-open {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(10, 5, 2, 0.86);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
   cursor: zoom-out;
-  opacity: 0;
   visibility: hidden;
-  transition: opacity 0.35s ease, visibility 0.35s ease;
+  pointer-events: none;
+  overscroll-behavior: contain;
+  /* stay visible just long enough for the photo to fly back to its spot */
+  transition: visibility 0s linear 0.45s;
+}
+
+.lightbox-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 5, 2, 0.92);
+  opacity: 0;
+  transition: opacity 0.35s ease;
 }
 
 .lightbox-overlay.active {
-  opacity: 1;
   visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+
+.lightbox-overlay.active::before {
+  opacity: 1;
 }
 
 .lightbox-stage {
@@ -1532,12 +1561,7 @@ body.lightbox-open {
   border-radius: 18px;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
   cursor: zoom-out;
-  transform: scale(0.9);
-  transition: transform 0.35s ease;
-}
-
-.lightbox-overlay.active img {
-  transform: scale(1);
+  will-change: transform;
 }
 
 .lightbox-close {
@@ -1602,6 +1626,37 @@ body.lightbox-open {
 
 .lightbox-counter[hidden] { display: none; }
 
+/* buttons and counter fade in just after the photo lands */
+.lightbox-close,
+.lightbox-counter,
+.lightbox-arrow {
+  opacity: 0;
+}
+
+.lightbox-overlay.active .lightbox-close,
+.lightbox-overlay.active .lightbox-counter,
+.lightbox-overlay.active .lightbox-arrow {
+  opacity: 1;
+}
+
+.lightbox-close,
+.lightbox-counter {
+  transition: opacity 0.25s ease;
+}
+
+.lightbox-arrow {
+  transition: background 0.2s ease, transform 0.2s ease, opacity 0.25s ease;
+}
+
+.lightbox-overlay.active .lightbox-close,
+.lightbox-overlay.active .lightbox-counter {
+  transition-delay: 0.2s;
+}
+
+.lightbox-overlay.active .lightbox-arrow {
+  transition-delay: 0s, 0s, 0.2s;
+}
+
 @media (max-width: 640px) {
   .lightbox-arrow {
     width: 40px;
@@ -1614,7 +1669,10 @@ body.lightbox-open {
 
 @media (prefers-reduced-motion: reduce) {
   .lightbox-overlay,
-  .lightbox-overlay img {
+  .lightbox-overlay::before,
+  .lightbox-close,
+  .lightbox-counter,
+  .lightbox-arrow {
     transition: none;
   }
 }
