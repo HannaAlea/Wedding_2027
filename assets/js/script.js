@@ -181,10 +181,22 @@ if (scrollHint && landingScreen) {
 }
 
 // Image lightbox, clicking any <img class="zoomable"> opens an enlarged,
-// centered version of it; clicking again (or pressing Esc) closes it
+// centered version of it. Images that share a "data-gallery" value (used by
+// the story-timeline photo stacks) open together as a swipeable gallery with
+// prev/next arrows; images without one just open on their own, same as before.
 const zoomableImages = document.querySelectorAll('.zoomable');
 
 if (zoomableImages.length) {
+  // Group images into galleries. Anything without data-gallery becomes a
+  // gallery of one, keyed by its own position, so existing single photos
+  // (e.g. on the dress code page) behave exactly as before.
+  const galleries = new Map();
+  zoomableImages.forEach((img, i) => {
+    const key = img.dataset.gallery || `__single-${i}`;
+    if (!galleries.has(key)) galleries.set(key, []);
+    galleries.get(key).push(img);
+  });
+
   // Build the lightbox markup once and reuse it for every image
   const overlay = document.createElement('div');
   overlay.className = 'lightbox-overlay';
@@ -192,8 +204,30 @@ if (zoomableImages.length) {
   overlay.setAttribute('aria-modal', 'true');
   overlay.setAttribute('aria-hidden', 'true');
 
+  const stage = document.createElement('div');
+  stage.className = 'lightbox-stage';
+  overlay.appendChild(stage);
+
   const overlayImg = document.createElement('img');
-  overlay.appendChild(overlayImg);
+  stage.appendChild(overlayImg);
+
+  const prevBtn = document.createElement('button');
+  prevBtn.className = 'lightbox-arrow lightbox-prev';
+  prevBtn.type = 'button';
+  prevBtn.setAttribute('aria-label', 'Previous photo');
+  prevBtn.innerHTML = '&#10094;';
+  stage.appendChild(prevBtn);
+
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'lightbox-arrow lightbox-next';
+  nextBtn.type = 'button';
+  nextBtn.setAttribute('aria-label', 'Next photo');
+  nextBtn.innerHTML = '&#10095;';
+  stage.appendChild(nextBtn);
+
+  const counter = document.createElement('div');
+  counter.className = 'lightbox-counter';
+  overlay.appendChild(counter);
 
   const closeBtn = document.createElement('button');
   closeBtn.className = 'lightbox-close';
@@ -205,12 +239,41 @@ if (zoomableImages.length) {
   document.body.appendChild(overlay);
 
   let lastFocused = null; // the thumbnail that was opened, to refocus on close
+  let currentGallery = [];
+  let currentIndex = 0;
+
+  function renderCurrent() {
+    const img = currentGallery[currentIndex];
+    overlayImg.src = img.currentSrc || img.src;
+    overlayImg.alt = img.alt || '';
+
+    const multiple = currentGallery.length > 1;
+    prevBtn.hidden = !multiple;
+    nextBtn.hidden = !multiple;
+    counter.hidden = !multiple;
+    if (multiple) {
+      counter.textContent = `${currentIndex + 1} / ${currentGallery.length}`;
+    }
+  }
+
+  function showPrev() {
+    currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
+    renderCurrent();
+  }
+
+  function showNext() {
+    currentIndex = (currentIndex + 1) % currentGallery.length;
+    renderCurrent();
+  }
 
   function openLightbox(sourceImg) {
-    overlayImg.src = sourceImg.currentSrc || sourceImg.src;
-    overlayImg.alt = sourceImg.alt || '';
+    const key = sourceImg.dataset.gallery || null;
+    currentGallery = key ? galleries.get(key) : [sourceImg];
+    currentIndex = currentGallery.indexOf(sourceImg);
+    if (currentIndex < 0) currentIndex = 0;
     lastFocused = sourceImg;
 
+    renderCurrent();
     overlay.classList.add('active');
     overlay.setAttribute('aria-hidden', 'false');
     document.body.classList.add('lightbox-open');
@@ -230,7 +293,7 @@ if (zoomableImages.length) {
   zoomableImages.forEach((img) => {
     img.setAttribute('tabindex', '0');
     img.setAttribute('role', 'button');
-    img.setAttribute('aria-label', 'Click to zoom image');
+    img.setAttribute('aria-label', img.dataset.gallery ? 'Click to view photos' : 'Click to zoom image');
 
     img.addEventListener('click', () => openLightbox(img));
     img.addEventListener('keydown', (e) => {
@@ -241,19 +304,51 @@ if (zoomableImages.length) {
     });
   });
 
-  // Clicking anywhere on the overlay, the dark backdrop or the zoomed
-  // image itself , closes it again
+  prevBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showPrev();
+  });
+  nextBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showNext();
+  });
+
+  // Clicking the dark backdrop closes it; clicking the image, arrows or
+  // counter should not (so people can flip through photos without exiting).
   overlay.addEventListener('click', closeLightbox);
+  stage.addEventListener('click', (e) => e.stopPropagation());
+  counter.addEventListener('click', (e) => e.stopPropagation());
   closeBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     closeLightbox();
   });
 
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && overlay.classList.contains('active')) {
-      closeLightbox();
-    }
+    if (!overlay.classList.contains('active')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') showPrev();
+    if (e.key === 'ArrowRight') showNext();
   });
+
+  // Touch swipe: left/right flips through the gallery, a small vertical
+  // tolerance keeps it from misfiring on an intentional up/down scroll.
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  overlay.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, { passive: true });
+
+  overlay.addEventListener('touchend', (e) => {
+    if (currentGallery.length < 2) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx > 0) showPrev();
+      else showNext();
+    }
+  }, { passive: true });
 }
 
 // Floating heart trail — mouse trail on desktop, tap bursts on mobile.
