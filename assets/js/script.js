@@ -280,15 +280,41 @@ if (zoomableImages.length) {
     }
   }
 
-  function showPrev() {
-    currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
+  // Move to the previous (-1) or next (+1) photo. The new photo slides in
+  // from the side you're heading towards, so it feels like turning a page.
+  let navToken = 0; // lets a fast second tap/swipe cancel the first one's animation
+  function go(dir) {
+    if (currentGallery.length < 2) return;
+    stopFlight();
+
+    const token = ++navToken;
+    currentIndex = (currentIndex + dir + currentGallery.length) % currentGallery.length;
+
+    // hide the old photo, swap in the new one, and only reveal it once it is
+    // decoded, so there is never a flash of the wrong picture
+    overlayImg.style.opacity = '0';
     renderCurrent();
+
+    const reveal = () => {
+      if (token !== navToken) return;
+      overlayImg.style.opacity = '';
+      if (reduceMotion.matches || !overlayImg.animate) return;
+      flyAnim = overlayImg.animate(
+          [
+            { transform: `translate3d(${dir * 48}px, 0, 0)`, opacity: 0 },
+            { transform: 'translate3d(0, 0, 0)', opacity: 1 }
+          ],
+          { duration: 260, easing: EASE }
+      );
+      flyAnim.onfinish = () => { flyAnim = null; };
+    };
+
+    if (overlayImg.decode) overlayImg.decode().then(reveal, reveal);
+    else reveal();
   }
 
-  function showNext() {
-    currentIndex = (currentIndex + 1) % currentGallery.length;
-    renderCurrent();
-  }
+  const showPrev = () => go(-1);
+  const showNext = () => go(1);
 
   // The visible photo area of a thumbnail on screen (inside its border), plus
   // its corner radius and object-position, so the flight starts exactly where
@@ -374,6 +400,8 @@ if (zoomableImages.length) {
     lastFocused = sourceImg;
 
     stopFlight();
+    navToken++;
+    overlayImg.style.opacity = '';
     sourceImg.classList.remove('lightbox-quiet');
     currentGallery.forEach((img) => preload(srcOf(img)));
     renderCurrent();
@@ -472,6 +500,17 @@ if (zoomableImages.length) {
   nextBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     showNext();
+  });
+
+  // On touch screens, tapping the right half of the photo goes to the next
+  // one and tapping the left half goes back to the previous one. (Swiping
+  // left/right does the same, see the touch handlers below.)
+  const coarsePointer = window.matchMedia('(pointer: coarse)');
+  overlayImg.addEventListener('click', (e) => {
+    if (currentGallery.length < 2 || !coarsePointer.matches) return;
+    const r = overlayImg.getBoundingClientRect();
+    if (e.clientX >= r.left + r.width / 2) showNext();
+    else showPrev();
   });
 
   // Clicking the dark backdrop closes it; clicking the image, arrows or
