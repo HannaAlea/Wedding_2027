@@ -733,3 +733,62 @@ if (zoomableImages.length) {
     touchStartValid = false;
   }, { passive: true });
 })();
+
+// RSVP form: submit to Formspree over fetch instead of a normal page
+// POST, so a successful submission can swap in a styled thank-you
+// message right on the page instead of navigating away to Formspree's
+// own confirmation page.
+const rsvpForm = document.getElementById('rsvpForm');
+
+if (rsvpForm) {
+  const formStatus = document.getElementById('formStatus');
+  const rsvpSuccess = document.getElementById('rsvpSuccess');
+  const submitBtn = rsvpForm.querySelector('button[type="submit"]');
+  const submitLabel = submitBtn ? submitBtn.textContent : 'Submit RSVP';
+
+  function setStatus(message, isError) {
+    if (!formStatus) return;
+    formStatus.textContent = message;
+    formStatus.classList.toggle('is-error', Boolean(isError));
+  }
+
+  rsvpForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    setStatus('');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+    }
+
+    try {
+      const response = await fetch(rsvpForm.action, {
+        method: 'POST',
+        body: new FormData(rsvpForm),
+        headers: { Accept: 'application/json' }
+      });
+
+      if (response.ok) {
+        rsvpForm.hidden = true;
+        if (rsvpSuccess) rsvpSuccess.hidden = false;
+        return; // no need to re-enable the button, the form is gone
+      }
+
+      // Formspree returns field-level errors as JSON when something's wrong
+      // (e.g. a required field missing), so surface those if present
+      const data = await response.json().catch(() => null);
+      const message =
+          data && Array.isArray(data.errors) && data.errors.length
+              ? data.errors.map((err) => err.message).join(', ')
+              : "Something went wrong sending your RSVP. Please try again.";
+      setStatus(message, true);
+    } catch (err) {
+      setStatus('Could not reach the server. Please check your connection and try again.', true);
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = submitLabel;
+    }
+  });
+}
