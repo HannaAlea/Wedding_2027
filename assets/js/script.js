@@ -90,7 +90,27 @@ const targetCard = document.querySelector('#enterTarget .hero-photo');
 let animateToCard = null;
 let isAnimating = false;
 
-if (landingScreen && landingImg && targetCard) {
+const requestedSection = window.location.hash.length > 1
+    ? document.getElementById(window.location.hash.slice(1))
+    : null;
+
+if (requestedSection && landingScreen) {
+  landingScreen.style.display = 'none';
+  const hint = document.getElementById('scrollHint');
+  if (hint) hint.classList.add('hidden');
+
+  const goToSection = () =>
+      requestedSection.scrollIntoView({ behavior: 'instant', block: 'start' });
+  goToSection();
+
+  let userMoved = false;
+  ['wheel', 'touchstart', 'keydown'].forEach((ev) =>
+      window.addEventListener(ev, () => { userMoved = true; }, { once: true, passive: true })
+  );
+  window.addEventListener('load', () => { if (!userMoved) goToSection(); });
+}
+
+if (!requestedSection && landingScreen && landingImg && targetCard) {
   document.body.classList.add('landing-active');
 
   animateToCard = function () {

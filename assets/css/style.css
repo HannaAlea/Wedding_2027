@@ -1973,3 +1973,9 @@ body.lightbox-open {
   max-width: 46ch;
   margin: 0 auto;
 }
+
+/* arriving from another page via a section link: no intro photo */
+.skip-landing #landingScreen,
+.skip-landing #scrollHint {
+  display: none !important;
+}
