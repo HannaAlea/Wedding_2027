@@ -308,6 +308,15 @@ p {
 
 .countdown small { color: var(--muted); font-size: 0.78rem; }
 
+
+.countdown span,
+.time,
+.wedding-date-card span,
+.story-marker,
+.footer-date {
+  font-variant-numeric: lining-nums;
+}
+
 /* the big photo area on the home page */
 .hero-visual {
   position: relative;
@@ -1834,6 +1843,16 @@ body.lightbox-open {
    it reuses .eyebrow, h1, .hero-actions and .button/.primary/.secondary
    from earlier in this file, so this section is really just the
    scattered-photo layout around them.
+
+   the photo positions/sizes below are all clamp(min, preferred, max)
+   instead of plain percentages. a plain % position or width scales
+   directly with the effective viewport, so pinch-zooming or resizing
+   could shrink the gaps between photos until they overlapped. clamp()
+   keeps a fixed px floor/ceiling on every value so the gutters between
+   photos and the edges of the screen can never compress past that
+   floor — the photos stay visually "pinned" in place. text and buttons
+   are untouched here and keep using their own independent clamp()
+   font sizing, so they stay fully responsive.
    ============================================================ */
 
 .gateway-body {
@@ -1841,7 +1860,7 @@ body.lightbox-open {
   display: grid;
   align-items: center;
   background: var(--bg);
-  overflow-x: hidden;
+  overflow-x: auto;
 }
 
 .gateway-stage {
@@ -1873,15 +1892,41 @@ body.lightbox-open {
   border-radius: 4px;
 }
 
-/* desktop scatter positions, roughly framing the edges and leaving
-   the middle clear for the text and buttons. percentages so it holds
-   together reasonably as the window is resized */
-.g1 { top: 4%;    left: 4%;   width: 15%; aspect-ratio: 4/5; transform: rotate(-7deg); }
-.g2 { top: 1%;    left: 41%;  width: 10%; aspect-ratio: 4/5; transform: rotate(3deg); }
-.g3 { bottom: 5%; left: 7%;   width: 15%; aspect-ratio: 5/4; transform: rotate(5deg); }
-.g4 { top: 6%;    right: 5%;  width: 13%; aspect-ratio: 4/5; transform: rotate(6deg); }
-.g5 { bottom: 6%; right: 6%;  width: 14%; aspect-ratio: 4/5; transform: rotate(-8deg); }
-.g7 { bottom: 4%; left: 42%;  width: 10%; aspect-ratio: 4/5; transform: rotate(-4deg); }
+/* DESKTOP (mouse) LAYOUT: a fixed-size "artboard" that is always
+   centered in the page. every photo is placed in plain px measured
+   from the artboard's top-left corner (--ax / --ay), and nothing here
+   depends on the window size or on % or vw. so when you zoom in or
+   out, or resize the window, the photos keep the exact same spots
+   relative to each other and can never crash into one another. if the
+   window gets smaller than the artboard the page just scrolls, like a
+   poster.
+
+   >>> TO MAKE EVERYTHING BIGGER OR SMALLER ON DESKTOP, CHANGE --s <<<
+   --s is one size knob for the photos AND the text together.
+   1 = the base size, 1.25 = 25% bigger, 1.5 = 50% bigger, and so on.
+   (the artboard is 1100 x 760 at --s: 1, so at 1.4 it's 1540 x 1064.
+   on a smaller laptop screen use something like 1 to 1.15.) */
+.gateway-stage {
+  --s: 1.4;
+  --ax: calc(50% - 550px * var(--s));
+  --ay: calc(50% - 380px * var(--s));
+  min-width: calc(1100px * var(--s));
+  min-height: max(100vh, calc(760px * var(--s)));
+}
+
+.gateway-photo { aspect-ratio: 4/5; }
+
+.g1 { left: calc(var(--ax) + 30px * var(--s));  top: calc(var(--ay) + 30px * var(--s));  width: calc(170px * var(--s)); transform: rotate(-7deg); }
+.g2 { left: calc(var(--ax) + 490px * var(--s)); top: calc(var(--ay) + 14px * var(--s));  width: calc(120px * var(--s)); transform: rotate(3deg); }
+.g3 { left: calc(var(--ax) + 60px * var(--s));  top: calc(var(--ay) + 520px * var(--s)); width: calc(190px * var(--s)); aspect-ratio: 5/4; transform: rotate(5deg); }
+.g4 { left: calc(var(--ax) + 880px * var(--s)); top: calc(var(--ay) + 40px * var(--s));  width: calc(160px * var(--s)); transform: rotate(6deg); }
+.g5 { left: calc(var(--ax) + 860px * var(--s)); top: calc(var(--ay) + 510px * var(--s)); width: calc(170px * var(--s)); transform: rotate(-8deg); }
+.g7 { left: calc(var(--ax) + 490px * var(--s)); top: calc(var(--ay) + 600px * var(--s)); width: calc(120px * var(--s)); transform: rotate(-4deg); }
+
+/* the two extra photos, reusing existing images, mid-height on the
+   left and right edges */
+.g6 { left: calc(var(--ax) + 18px * var(--s));  top: calc(var(--ay) + 300px * var(--s)); width: calc(130px * var(--s)); transform: rotate(-5deg); }
+.g8 { left: calc(var(--ax) + 952px * var(--s)); top: calc(var(--ay) + 290px * var(--s)); width: calc(130px * var(--s)); transform: rotate(5deg); }
 
 .gateway-content {
   position: relative;
@@ -1895,8 +1940,10 @@ body.lightbox-open {
 
 .gateway-content h1 {
   max-width: none;
-  font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+  font-size: calc(4.8rem * var(--s));
 }
+
+.gateway-content .eyebrow { font-size: calc(0.78rem * var(--s)); }
 
 .gateway-content h1 .amp {
   color: var(--accent-deep);
@@ -1904,32 +1951,46 @@ body.lightbox-open {
 }
 
 .gateway-subtext {
-  margin: 20px 0 8px;
+  margin: calc(20px * var(--s)) 0 8px;
   max-width: 42ch;
+  font-size: calc(1rem * var(--s));
 }
 
 .gateway-actions { margin-top: 26px; }
 
-/* tablets: fewer photos and a bit bigger so they still read clearly */
-@media (max-width: 980px) {
-  .gateway-stage { padding: 40px 20px; }
-  .gateway-photo { width: 20%; }
-}
+/* the site-wide small-screen rules stretch buttons full width and stack
+   them. on desktop that would also trigger just from zooming in, so
+   keep the two buttons side by side at their normal size here. phones
+   get the stacked full-width version back in the touch block below */
+.gateway-actions { width: auto; justify-content: center; }
+.gateway-actions .button { width: auto; flex: 0 0 auto; min-height: calc(52px * var(--s)); padding: 0 calc(24px * var(--s)); font-size: calc(0.95rem * var(--s)); }
+.gateway-actions { gap: calc(14px * var(--s)); }
 
-/* phones: pull the six photos in tight to the very top and bottom
-   edges (three-ish per side) so the text and buttons stay front and
-   center and nothing sits under a thumb */
-@media (max-width: 640px) {
-  .gateway-photo { width: 25% !important; padding: 5px 5px 14px; }
-  .g1 { top: 3%;    left: 4%;  transform: rotate(-8deg); }
-  .g2 { top: 1.5%;  left: 50%; transform: translateX(-50%) rotate(2deg); }
-  .g4 { top: 3%;    right: 4%; transform: rotate(7deg); }
-  .g3 { bottom: 3%; left: 4%;  transform: rotate(6deg); }
-  .g7 { bottom: 1.5%; left: 50%; right: auto; transform: translateX(-50%) rotate(-4deg); }
-  .g5 { bottom: 3%; right: 4%; transform: rotate(-6deg); }
+/* PHONES / TOUCH SCREENS ONLY. this is picked by what the device is
+   (touch, no hover), not by window width, so zooming a desktop browser
+   can never flip it into this layout and rearrange the photos. a phone
+   pinch-zoom doesn't change the layout at all, so it already stays put.
+   the photos hug the top and bottom edges so the text and buttons stay
+   front and center and nothing sits under a thumb. g6/g8 are hidden
+   here since there isn't room for them without crowding the text. */
+@media (hover: none) and (pointer: coarse) {
+  .gateway-body { overflow-x: hidden; }
+  .gateway-stage { --s: 1; min-width: 0; min-height: 100vh; padding: 150px 20px; }
+  .gateway-actions { width: 100%; }
+  .gateway-actions .button { width: 100%; flex: 1 1 100%; }
+  .gateway-photo { width: clamp(72px, 25vw, 110px); padding: 5px 5px 14px; }
+  .g6, .g8 { display: none; }
+  .g1 { left: clamp(10px, 4%, 24px);  top: clamp(10px, 3%, 24px);    transform: rotate(-8deg); }
+  .g2 { left: 50%;                     top: clamp(6px, 1.5%, 16px);   transform: translateX(-50%) rotate(2deg); }
+  .g4 { left: auto; right: clamp(10px, 4%, 24px); top: clamp(10px, 3%, 24px); transform: rotate(7deg); }
+  .g3 { left: clamp(10px, 4%, 24px);  top: auto; bottom: clamp(10px, 3%, 24px); aspect-ratio: 4/5; transform: rotate(6deg); }
+  .g7 { left: 50%;                     top: auto; bottom: clamp(6px, 1.5%, 16px); transform: translateX(-50%) rotate(-4deg); }
+  .g5 { left: auto; right: clamp(10px, 4%, 24px); top: auto; bottom: clamp(10px, 3%, 24px); transform: rotate(-6deg); }
   .gateway-content { padding: 0 8%; }
   .gateway-content h1 { font-size: 2.5rem; }
-  .gateway-subtext { font-size: 0.92rem; }
+  .gateway-content .eyebrow { font-size: 0.78rem; }
+  .gateway-subtext { font-size: 0.92rem; margin: 20px 0 8px; }
+  .gateway-actions .button { min-height: 52px; padding: 0 24px; font-size: 0.95rem; }
 }
 
 
