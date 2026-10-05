@@ -522,12 +522,11 @@ if (zoomableImages.length) {
     showNext();
   });
 
-  // On touch screens, tapping the right half of the photo goes to the next
-  // one and tapping the left half goes back to the previous one. (Swiping
-  // left/right does the same, see the touch handlers below.)
-  const coarsePointer = window.matchMedia('(pointer: coarse)');
+  // Clicking or tapping the right half of the photo goes to the next one,
+  // the left half goes back. Works the same on desktop and phones.
+  // (Swiping left/right also works on touch, see the handlers below.)
   overlayImg.addEventListener('click', (e) => {
-    if (currentGallery.length < 2 || !coarsePointer.matches) return;
+    if (currentGallery.length < 2) return;
     const r = overlayImg.getBoundingClientRect();
     if (e.clientX >= r.left + r.width / 2) showNext();
     else showPrev();
@@ -553,7 +552,10 @@ if (zoomableImages.length) {
 
   window.addEventListener('keydown', (e) => {
     if (!overlay.classList.contains('active')) return;
-    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.key)) {
+    if (
+        ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.key) ||
+        (e.key === ' ' && !e.target.closest('button'))
+    ) {
       e.preventDefault();
     }
     if (e.key === 'Escape') closeLightbox();

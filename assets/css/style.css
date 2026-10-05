@@ -1488,9 +1488,8 @@ a.pill-value:hover {
   cursor: zoom-in;
 }
 
-body.lightbox-open {
-  overflow: hidden;
-}
+/* (body.lightbox-open no longer hides overflow: script.js already blocks
+   scrolling, and hiding the scrollbar made the whole page re-layout on desktop) */
 
 .lightbox-overlay {
   position: fixed;
@@ -1500,9 +1499,9 @@ body.lightbox-open {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(10, 5, 2, 0.86);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  /* solid dark backdrop instead of a blur: blurring a big desktop screen
+     every frame was the main cause of the lag */
+  background: rgba(10, 5, 2, 0.92);
   cursor: zoom-out;
   opacity: 0;
   visibility: hidden;
@@ -1514,30 +1513,55 @@ body.lightbox-open {
   visibility: visible;
 }
 
+/* three columns: [ ‹ ]  [ photo ]  [ › ]
+   the arrows sit outside the photo, and the box has a fixed width so they
+   stay in the same spot no matter what shape the next photo is */
 .lightbox-stage {
-  position: relative;
-  display: flex;
+  --arrow: 48px;
+  --arrow-gap: 20px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: center;
-  max-width: 100%;
+  justify-items: center;
+  column-gap: var(--arrow-gap);
+  width: min(100%, 900px);
   max-height: 100%;
-  cursor: default;
+  pointer-events: none; /* empty space next to the photo still closes the viewer */
+}
+
+.lightbox-stage > * { pointer-events: auto; }
+
+/* gallery mode: make room for the arrows on both sides */
+.lightbox-stage:has(.lightbox-arrow:not([hidden])) {
+  width: min(100%, calc(900px + 2 * (var(--arrow) + var(--arrow-gap))));
+}
+
+/* single photo (dress code page): no arrows, so no gaps either */
+.lightbox-stage:not(:has(.lightbox-arrow:not([hidden]))) {
+  column-gap: 0;
 }
 
 .lightbox-overlay img {
-  max-width: min(92vw, 900px);
+  grid-column: 2;
+  grid-row: 1;
+  max-width: 100%;
   max-height: 80vh;
   width: auto;
   height: auto;
   border-radius: 18px;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
-  cursor: zoom-out;
+  cursor: default;
   transform: scale(0.9);
   transition: transform 0.35s ease;
 }
 
 .lightbox-overlay.active img {
   transform: scale(1);
+}
+
+/* in a gallery, clicking the left/right half of the photo flips it */
+.lightbox-stage:has(.lightbox-arrow:not([hidden])) img {
+  cursor: pointer;
 }
 
 .lightbox-close {
@@ -1557,32 +1581,31 @@ body.lightbox-open {
   place-items: center;
 }
 
-/* Prev/next arrows for a multi-photo gallery inside the lightbox */
+/* Prev/next arrows, sitting on the dark backdrop beside the photo */
 .lightbox-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 48px;
-  height: 48px;
+  grid-row: 1;
+  width: var(--arrow);
+  height: var(--arrow);
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(10, 5, 2, 0.45);
+  background: rgba(255, 255, 255, 0.08);
   color: #F9F8F6;
   font-size: 1.1rem;
   line-height: 1;
   cursor: pointer;
   display: grid;
   place-items: center;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
+
+.lightbox-prev { grid-column: 1; }
+.lightbox-next { grid-column: 3; }
 
 .lightbox-arrow:hover,
 .lightbox-arrow:focus-visible {
-  background: rgba(10, 5, 2, 0.72);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.6);
 }
-
-.lightbox-prev { left: -8px; }
-.lightbox-next { right: -8px; }
 
 .lightbox-arrow[hidden] { display: none; }
 
@@ -1602,14 +1625,11 @@ body.lightbox-open {
 
 .lightbox-counter[hidden] { display: none; }
 
+/* phones: smaller arrows and tighter side padding so the photo stays big */
 @media (max-width: 640px) {
-  .lightbox-arrow {
-    width: 40px;
-    height: 40px;
-    font-size: 1rem;
-  }
-  .lightbox-prev { left: 4px; }
-  .lightbox-next { right: 4px; }
+  .lightbox-overlay { padding: 24px 8px; }
+  .lightbox-stage { --arrow: 34px; --arrow-gap: 6px; }
+  .lightbox-arrow { font-size: 0.9rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
