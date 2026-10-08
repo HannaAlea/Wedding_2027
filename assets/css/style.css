@@ -99,13 +99,9 @@ img { max-width: 100%; display: block; }
 
 .brand,
 .nav a,
-.text-link,
-
-
-.back-link {
+.text-link {
   color: var(--text);
   text-decoration: none;
-
 }
 
 .brand {
@@ -570,8 +566,7 @@ summary::-webkit-details-marker { display: none; }
 }
 
 /* underlined text links */
-.text-link,
-.back-link {
+.text-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -582,29 +577,7 @@ summary::-webkit-details-marker { display: none; }
   text-underline-offset: 3px;
 }
 
-/* styles for the rsvp page */
-.rsvp-body {
-  min-height: 100vh;
-  display: grid;
-  align-items: center;
-  background: var(--bg);
-}
-
-.rsvp-page .back-link {
-  display: block;
-  max-width: 860px;
-  margin: 0 auto 18px;
-}
-
-.rsvp-panel {
-  max-width: 860px;
-  margin: 0 auto;
-  background: var(--bg-soft);
-}
-
-.rsvp-intro   { margin-bottom: 28px; }
-.rsvp-form    { display: grid; gap: 18px; }
-
+/* form fields */
 .field-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -717,7 +690,7 @@ select option { background: #EFE9E3; color: #2C1A0E; }
 
 /* changes for small screens, like phones */
 @media (max-width: 640px) {
-  .site-shell, .rsvp-page { width: min(100% - 20px, 1000px); }
+  .site-shell { width: min(100% - 20px, 1000px); }
   .topbar {
     width: 100vw;
     margin-left: calc(50% - 50vw);
@@ -782,7 +755,6 @@ select option { background: #EFE9E3; color: #2C1A0E; }
   .glass-card,
   .venue-card,
   .map-card,
-  .rsvp-panel,
   .cta-section { padding: 22px; }
 }
 
@@ -1814,7 +1786,7 @@ a.pill-value:hover {
   initial-value: 0deg;
 }
 
-/* floating heart cursor trail — subtle, GPU-friendly, respects reduced motion */
+/* floating heart cursor trail, subtle, GPU-friendly, respects reduced motion */
 .cursor-heart {
   position: fixed;
   top: 0;
@@ -1870,7 +1842,7 @@ a.pill-value:hover {
    could shrink the gaps between photos until they overlapped. clamp()
    keeps a fixed px floor/ceiling on every value so the gutters between
    photos and the edges of the screen can never compress past that
-   floor — the photos stay visually "pinned" in place. text and buttons
+   floor, the photos stay visually "pinned" in place. text and buttons
    are untouched here and keep using their own independent clamp()
    font sizing, so they stay fully responsive.
    ============================================================ */
@@ -2015,45 +1987,299 @@ a.pill-value:hover {
 
 
 /* ============================================================
-   RSVP FORM SUBMISSION STATUS
-   the little status line above the submit button (for errors),
-   and the thank-you message that swaps in for the form once
-   Formspree confirms the submission went through
+   RSVP FORM PAGE
+   everything for rsvp-form.html lives here: the back button,
+   the panel, the attend / decline cards, and the thank-you state
    ============================================================ */
 
-.form-status {
-  min-height: 1.3em;
-  font-size: 0.9rem;
-  color: var(--success);
-  margin: -6px 0 0;
+.rsvp-body {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  background: var(--bg);
 }
 
-.form-status:empty { margin: 0; }
+/* sits above the grid texture from body::before */
+.rsvp-page {
+  position: relative;
+  z-index: 1;
+  width: min(680px, 100%);
+  padding-block: 32px 56px;
+}
+
+/* the back button: a real pill with a 44px tap area */
+.rsvp-page .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin: 0 0 16px;
+  padding: 0 18px 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(249, 248, 246, 0.7);
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.rsvp-page .back-link:hover {
+  background: var(--bg-soft);
+  border-color: rgba(44, 26, 14, 0.28);
+}
+
+.back-link-icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.2s ease;
+}
+
+.back-link:hover .back-link-icon {
+  transform: translateX(-3px);
+}
+
+.rsvp-panel {
+  padding: clamp(24px, 5vw, 44px);
+}
+
+.rsvp-intro {
+  margin-bottom: 28px;
+}
+
+.rsvp-note {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-left: 2px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  background: rgba(249, 248, 246, 0.6);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.rsvp-form {
+  display: grid;
+  gap: 20px;
+}
+
+.rsvp-form .field-label {
+  display: block;
+  margin-bottom: 8px;
+  padding: 0;
+  font-size: 0.94rem;
+  color: var(--muted);
+}
+
+.field-label small {
+  font-size: 0.82rem;
+  opacity: 0.8;
+}
+
+.rsvp-form ::placeholder {
+  color: rgba(44, 26, 14, 0.5);
+}
+
+/* attend / decline as two tappable cards instead of a dropdown */
+.attendance {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.choice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 14px 48px 14px 18px;
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  background: rgba(249, 248, 246, 0.85);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* the real radio covers the whole card, invisible, so clicks,
+   keyboard arrows and the "please choose" bubble all still work */
+.choice input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.choice span {
+  margin: 0;
+}
+
+.choice-title {
+  font-size: 0.97rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* drawn radio dot in the top right corner */
+.choice::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  margin-top: -9px;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid rgba(44, 26, 14, 0.28);
+  border-radius: 50%;
+  transition: border 0.2s ease;
+}
+
+.choice:hover {
+  border-color: rgba(44, 26, 14, 0.28);
+}
+
+.choice:has(input:checked) {
+  border-color: var(--text);
+  background: var(--bg);
+  box-shadow: 0 0 0 3px rgba(44, 26, 14, 0.07);
+}
+
+.choice:has(input:checked)::after {
+  border: 5px solid var(--text);
+}
+
+/* party size, names and dietary notes, shown once "yes" is picked */
+.attending-only {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* dropdown with its own chevron, spaced like the other fields */
+.rsvp-form select {
+  appearance: none;
+  padding-right: 48px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232C1A0E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  background-size: 18px;
+  cursor: pointer;
+}
+
+.rsvp-form .field-hint {
+  display: block;
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.rsvp-form .button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+  transform: none;
+}
+
+/* keyboard focus rings */
+.rsvp-page .back-link:focus-visible,
+.rsvp-page .button:focus-visible,
+.choice:has(input:focus-visible) {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 3px;
+}
+
+/* status line above the submit button (errors). it sits in
+   .form-actions so an empty one takes up no space at all */
+.form-actions {
+  margin-top: 4px;
+}
+
+.form-status {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  color: var(--success);
+}
+
+.form-status:empty {
+  margin: 0;
+}
 
 .form-status.is-error {
   color: #8a2f22;
 }
 
-/* the [hidden] attribute would normally do this on its own, but
-   .rsvp-form already sets display:grid, and an author style always
-   wins over the browser's built-in [hidden] rule, so it has to be
-   spelled out here */
-.rsvp-form[hidden] {
-  display: none;
-}
-
+/* thank-you message that replaces the form after sending */
 .rsvp-success {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding-block: 24px;
   text-align: center;
 }
 
 .rsvp-success h2 {
-  margin: 4px 0 12px;
+  margin: 0;
+  outline: none;
 }
 
-.rsvp-success p:last-child {
+.rsvp-success p:not(.eyebrow) {
   max-width: 46ch;
-  margin: 0 auto;
 }
+
+.success-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* .rsvp-form and .rsvp-success set their own display,
+   so [hidden] has to be spelled out to win */
+.rsvp-form[hidden],
+.rsvp-success[hidden],
+.attending-only[hidden],
+.rsvp-form .field[hidden] {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .rsvp-body {
+    align-items: start;
+  }
+
+  .rsvp-page {
+    padding-block: 16px 40px;
+  }
+
+  .choice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .success-actions {
+    width: 100%;
+  }
+}
+
 
 /* arriving from another page via a section link: no intro photo */
 .skip-landing #landingScreen,

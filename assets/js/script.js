@@ -584,7 +584,7 @@ if (zoomableImages.length) {
   }, { passive: true });
 }
 
-// Floating heart trail — mouse trail on desktop, tap bursts on mobile.
+// Floating heart trail, mouse trail on desktop, tap bursts on mobile.
 // Respects prefers-reduced-motion; cleans up via animationend so nothing
 // piles up in the DOM.
 (function () {
@@ -756,17 +756,42 @@ if (zoomableImages.length) {
   }, { passive: true });
 })();
 
-// RSVP form: submit to Formspree over fetch instead of a normal page
-// POST, so a successful submission can swap in a styled thank-you
-// message right on the page instead of navigating away to Formspree's
-// own confirmation page.
+// RSVP back button: if the guest came here from another page on this
+// site, go back to it so they land where they left off (same scroll
+// position). Guests who arrive straight from the QR code or a shared
+// link have nothing to go back to, so the link falls through to the
+// home page as usual.
+const backLink = document.getElementById('backLink');
+
+if (backLink) {
+  backLink.addEventListener('click', (e) => {
+    const cameFromSite = document.referrer.startsWith(window.location.origin);
+    if (cameFromSite && window.history.length > 1) {
+      e.preventDefault();
+      window.history.back();
+    }
+  });
+}
+
+// RSVP form: one reply per invitation. Guests say how many people
+// from their invitation are coming, and the form is sent to Formspree
+// over fetch so a thank-you message can replace it right on the page.
 const rsvpForm = document.getElementById('rsvpForm');
 
 if (rsvpForm) {
+  const rsvpIntro = document.getElementById('rsvpIntro');
   const formStatus = document.getElementById('formStatus');
   const rsvpSuccess = document.getElementById('rsvpSuccess');
+  const successTitle = document.getElementById('successTitle');
+  const successMessage = document.getElementById('successMessage');
+  const sendAnother = document.getElementById('sendAnother');
+  const attendYes = document.getElementById('attendYes');
+  const attendingFields = document.getElementById('attendingFields');
+  const partySize = document.getElementById('partySize');
+  const partyNamesField = document.getElementById('partyNamesField');
+  const partyNames = document.getElementById('partyNames');
   const submitBtn = rsvpForm.querySelector('button[type="submit"]');
-  const submitLabel = submitBtn ? submitBtn.textContent : 'Submit RSVP';
+  const submitLabel = submitBtn ? submitBtn.textContent : 'Send RSVP';
 
   function setStatus(message, isError) {
     if (!formStatus) return;
@@ -774,43 +799,106 @@ if (rsvpForm) {
     formStatus.classList.toggle('is-error', Boolean(isError));
   }
 
+  function setSending(isSending) {
+    if (!submitBtn) return;
+    submitBtn.disabled = isSending;
+    submitBtn.textContent = isSending ? 'Sending...' : submitLabel;
+  }
+
+  function isAttending() {
+    return Boolean(attendYes && attendYes.checked);
+  }
+
+  // A disabled field is skipped by validation and left out of the
+  // submission, so hidden questions never block a reply.
+  function updateFields() {
+    const attending = isAttending();
+    attendingFields.hidden = !attending;
+    attendingFields.disabled = !attending;
+
+    const bringingOthers = Number(partySize.value) > 1;
+    partyNamesField.hidden = !bringingOthers;
+    partyNames.disabled = !bringingOthers;
+    partyNames.required = bringingOthers;
+  }
+
+  function showSuccess() {
+    const count = Number(partySize.value);
+
+    if (!isAttending()) {
+      successMessage.textContent = "Your reply has been received. We'll miss you, and thank you for letting us know.";
+    } else if (count > 1) {
+      successMessage.textContent = `Your reply has been received for ${count} guests. We can't wait to celebrate with you.`;
+    } else {
+      successMessage.textContent = "Your reply has been received. We can't wait to celebrate with you.";
+    }
+
+    rsvpForm.hidden = true;
+    if (rsvpIntro) rsvpIntro.hidden = true;
+    rsvpSuccess.hidden = false;
+
+    // move focus to the heading so screen readers announce it, and
+    // bring the card into view on phones where the form was scrolled down
+    successTitle.focus({ preventScroll: true });
+    rsvpSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // Start a fresh, empty form for the next invitation
+  function resetForm() {
+    rsvpForm.reset();
+    updateFields();
+    setStatus('');
+    setSending(false);
+
+    rsvpSuccess.hidden = true;
+    if (rsvpIntro) rsvpIntro.hidden = false;
+    rsvpForm.hidden = false;
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    rsvpForm.querySelector('input[name="name"]').focus({ preventScroll: true });
+  }
+
+  rsvpForm.addEventListener('change', (e) => {
+    if (e.target.name === 'attendance' || e.target === partySize) updateFields();
+  });
+
+  if (sendAnother) sendAnother.addEventListener('click', resetForm);
+
   rsvpForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     setStatus('');
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
-    }
+    setSending(true);
+
+    const data = new FormData(rsvpForm);
+    data.set('attending_count', isAttending() ? partySize.value : 0);
 
     try {
       const response = await fetch(rsvpForm.action, {
         method: 'POST',
-        body: new FormData(rsvpForm),
+        body: data,
         headers: { Accept: 'application/json' }
       });
 
       if (response.ok) {
-        rsvpForm.hidden = true;
-        if (rsvpSuccess) rsvpSuccess.hidden = false;
-        return; // no need to re-enable the button, the form is gone
+        showSuccess();
+        return;
       }
 
       // Formspree returns field-level errors as JSON when something's wrong
       // (e.g. a required field missing), so surface those if present
-      const data = await response.json().catch(() => null);
+      const result = await response.json().catch(() => null);
       const message =
-          data && Array.isArray(data.errors) && data.errors.length
-              ? data.errors.map((err) => err.message).join(', ')
-              : "Something went wrong sending your RSVP. Please try again.";
+          result && Array.isArray(result.errors) && result.errors.length
+              ? result.errors.map((err) => err.message).join(', ')
+              : 'Something went wrong sending your RSVP. Please try again.';
       setStatus(message, true);
     } catch (err) {
       setStatus('Could not reach the server. Please check your connection and try again.', true);
     }
 
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.textContent = submitLabel;
-    }
+    setSending(false);
   });
+
+  updateFields();
 }

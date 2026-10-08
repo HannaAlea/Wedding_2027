@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="RSVP for Hanna & Nathaniel's wedding on 30 July 2027 in Ålesund, Norway.">
   <title>RSVP | Hanna & Nathaniel</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon16x16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/appletouchicon.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/androidchrome192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/images/androidchrome512x512.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/images/android-chrome-512x512.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,64 +17,99 @@
 </head>
 <body class="rsvp-body">
 <main class="rsvp-page">
-  <a class="back-link" href="index.html"> &lt; Back to home</a>
+  <a class="back-link" id="backLink" href="index.html">
+    <svg class="back-link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M15 18l-6-6 6-6"/>
+    </svg>
+    <span>Back</span>
+  </a>
 
-  <section class="rsvp-panel">
-    <div class="rsvp-intro">
-      <p class="eyebrow">Hanna & Nathaniel</p>
-      <h1>RSVP</h1>
-      <p>Please let us know if you will be celebrating with us.</p>
-    </div>
+  <section class="rsvp-panel" aria-labelledby="rsvpTitle">
+    <header class="rsvp-intro" id="rsvpIntro">
+      <p class="eyebrow">Hanna &amp; Nathaniel</p>
+      <h1 id="rsvpTitle">RSVP</h1>
+      <p>Kindly reply by <strong>1 May 2027</strong> for our wedding on <strong>30 July 2027</strong> in Ålesund, Norway.</p>
+      <p class="rsvp-note">Your invitation lists the guests we have saved a seat for. Please send one reply for all of them.</p>
+    </header>
 
     <form class="rsvp-form" id="rsvpForm" action="https://formspree.io/f/mbglgoqr" method="POST">
       <input type="hidden" name="_subject" value="New wedding RSVP submission">
 
-      <p class="hidden-field">
-        <label>Don't fill this out: <input name="_gotcha"></label>
+      <p class="hidden-field" aria-hidden="true">
+        <label>Don't fill this out: <input name="_gotcha" tabindex="-1" autocomplete="off"></label>
       </p>
 
       <div class="field-grid">
-        <label>
-          <span>Full name</span>
-          <input type="text" name="name" placeholder="Your full name" required>
+        <label class="field">
+          <span class="field-label">Full name</span>
+          <input type="text" name="name" autocomplete="name" required>
         </label>
 
-        <label>
-          <span>Email</span>
-          <input type="email" name="email" placeholder="you@example.com" required>
+        <label class="field">
+          <span class="field-label">Email</span>
+          <input type="email" name="email" autocomplete="email" required>
         </label>
       </div>
 
-      <div class="field-grid">
-        <label>
-          <span>Will you attend?</span>
-          <select name="attendance" required>
-            <option value="">Choose one</option>
-            <option value="Yes, happily attending">Yes, happily attending</option>
-            <option value="Sorry, cannot attend">Sorry, cannot attend</option>
+      <fieldset class="attendance">
+        <legend class="field-label">Will you attend?</legend>
+        <div class="choice-grid">
+          <label class="choice">
+            <input type="radio" name="attendance" id="attendYes" value="Yes, happily attending" required>
+            <span class="choice-title">Yes, I'll be there</span>
+          </label>
+
+          <label class="choice">
+            <input type="radio" name="attendance" id="attendNo" value="Sorry, cannot attend">
+            <span class="choice-title">No, I can't make it</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- only shown, validated and sent when the guest is attending -->
+      <fieldset class="attending-only" id="attendingFields">
+        <label class="field">
+          <span class="field-label">How many people from your invitation are coming, including you?</span>
+          <select name="party_size" id="partySize">
+            <option value="1">Just me</option>
+            <option value="2">2 of us</option>
+            <option value="3">3 of us</option>
+            <option value="4">4 of us</option>
+            <option value="5">5 of us</option>
           </select>
+          <span class="field-hint">Please include only the people named on your invitation.</span>
         </label>
+
+        <label class="field" id="partyNamesField" hidden>
+          <span class="field-label">Names of the others coming</span>
+          <input type="text" name="party_names" id="partyNames" placeholder="As written on your invitation">
+        </label>
+
+        <label class="field">
+          <span class="field-label">Dietary notes <small>(optional)</small></span>
+          <input type="text" name="dietary" placeholder="Allergies or dietary restrictions">
+        </label>
+      </fieldset>
+
+      <label class="field">
+        <span class="field-label">Message for the couple <small>(optional)</small></span>
+        <textarea name="message" rows="4" placeholder="Write a short message"></textarea>
+      </label>
+
+      <div class="form-actions">
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        <button class="button primary full-width" type="submit">Send RSVP</button>
       </div>
-
-      <label>
-        <span>Dietary notes</span>
-        <input type="text" name="dietary" placeholder="Allergies or dietary restrictions">
-      </label>
-
-      <label>
-        <span>Message for the couple</span>
-        <textarea name="message" rows="5" placeholder="Write a short message"></textarea>
-      </label>
-
-      <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
-
-      <button class="button primary full-width" type="submit">Submit RSVP</button>
     </form>
 
     <div class="rsvp-success" id="rsvpSuccess" hidden>
-      <p class="eyebrow">Hanna & Nathaniel</p>
-      <h2>Thank you!</h2>
-      <p>Your RSVP has been received &mdash; we can't wait to celebrate with you.</p>
+      <p class="eyebrow">Hanna &amp; Nathaniel</p>
+      <h2 id="successTitle" tabindex="-1">Thank you!</h2>
+      <p id="successMessage">Your RSVP has been received.</p>
+      <div class="success-actions">
+        <button class="button primary" id="sendAnother" type="button">Send another reply</button>
+        <a class="button secondary" href="index.html">Explore the website</a>
+      </div>
     </div>
   </section>
 </main>
