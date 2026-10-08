@@ -756,6 +756,23 @@ if (zoomableImages.length) {
   }, { passive: true });
 })();
 
+// RSVP back button: if the guest came here from another page on this
+// site, go back to it so they land where they left off (same scroll
+// position). Guests who arrive straight from the QR code or a shared
+// link have nothing to go back to, so the link falls through to the
+// home page as usual.
+const backLink = document.getElementById('backLink');
+
+if (backLink) {
+  backLink.addEventListener('click', (e) => {
+    const cameFromSite = document.referrer.startsWith(window.location.origin);
+    if (cameFromSite && window.history.length > 1) {
+      e.preventDefault();
+      window.history.back();
+    }
+  });
+}
+
 // RSVP form: submit to Formspree over fetch instead of a normal page
 // POST, so a successful submission can swap in a styled thank-you
 // message right on the page instead of navigating away to Formspree's
@@ -765,13 +782,35 @@ const rsvpForm = document.getElementById('rsvpForm');
 if (rsvpForm) {
   const formStatus = document.getElementById('formStatus');
   const rsvpSuccess = document.getElementById('rsvpSuccess');
+  const successTitle = document.getElementById('successTitle');
+  const successMessage = document.getElementById('successMessage');
   const submitBtn = rsvpForm.querySelector('button[type="submit"]');
-  const submitLabel = submitBtn ? submitBtn.textContent : 'Submit RSVP';
+  const submitLabel = submitBtn ? submitBtn.textContent : 'Send RSVP';
 
   function setStatus(message, isError) {
     if (!formStatus) return;
     formStatus.textContent = message;
     formStatus.classList.toggle('is-error', Boolean(isError));
+  }
+
+  function showSuccess() {
+    const attending = document.getElementById('attendYes')?.checked;
+
+    if (successMessage) {
+      successMessage.textContent = attending
+          ? "Your RSVP has been received. We can't wait to celebrate with you."
+          : "Your RSVP has been received. We'll miss you, and thank you for letting us know.";
+    }
+
+    rsvpForm.hidden = true;
+    if (rsvpSuccess) rsvpSuccess.hidden = false;
+
+    // move focus to the heading so screen readers announce it, and
+    // bring it into view on phones where the form was scrolled down
+    if (successTitle) {
+      successTitle.focus({ preventScroll: true });
+      successTitle.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
 
   rsvpForm.addEventListener('submit', async (e) => {
@@ -791,8 +830,7 @@ if (rsvpForm) {
       });
 
       if (response.ok) {
-        rsvpForm.hidden = true;
-        if (rsvpSuccess) rsvpSuccess.hidden = false;
+        showSuccess();
         return; // no need to re-enable the button, the form is gone
       }
 
@@ -802,7 +840,7 @@ if (rsvpForm) {
       const message =
           data && Array.isArray(data.errors) && data.errors.length
               ? data.errors.map((err) => err.message).join(', ')
-              : "Something went wrong sending your RSVP. Please try again.";
+              : 'Something went wrong sending your RSVP. Please try again.';
       setStatus(message, true);
     } catch (err) {
       setStatus('Could not reach the server. Please check your connection and try again.', true);
